@@ -26,6 +26,7 @@
   label-sep: 0em,
   marker-width: 0.5em,
   number-width: 1.5em,
+  debug: false,
   children
 ) = context {
   let spacing = if spacing == auto {
@@ -43,7 +44,7 @@
     body: []
   ) = block(
     inset: (left: indent + label-width + body-indent),
-    stroke: green + 1pt,
+    stroke: if (debug) { green + 1pt } else { none },
     above: spacing,
     below: spacing,
     {
@@ -53,7 +54,7 @@
         move(box(
           width: label-width,
           inset: (right: label-sep),
-          stroke: red,
+          stroke: if (debug) { red } else { none },
           align(alignment, label)
         ), dx: - label-width - body-indent)
       ) + body
