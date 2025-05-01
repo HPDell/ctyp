@@ -17,17 +17,31 @@
 }
 
 #let enumitem(
-  marker: (sym.bullet, sym.triangle.r.filled, sym.dash),
+  marker: (sym.circle.filled, sym.triangle.r.filled, sym.dash),
   numberer: ("1)", "a)", "i)"),
   children
 ) = {
-  let item-template(label-width: 1em, hanging: 1em, item) = block(
+  let item-template(
+    label-width: 1em,
+    label-sep: 4pt,
+    hanging: 1em,
+    alignment: left,
+    label: [],
+    body: []
+  ) = block(
     inset: (left: hanging),
     above: .6em,
     {
       set par(first-line-indent: (amount: 0em, all: true), hanging-indent: 0em)
-      box(width: 0em, move(item.label, dx: -label-width))
-      item.body
+      box(
+        width: 0em,
+        move(box(
+          width: label-width,
+          inset: (right: label-sep),
+          align(alignment, label)
+        ), dx: -label-width)
+      )
+      body
     }
   )
   let queue = ((
@@ -47,14 +61,17 @@
   while cur.at(0) < cur-max.at(0) {
     if cur.at(depth) >= cur-max.at(depth) {
       let qe = queue.pop()
-      queue.last().body += item-template(qe)
+      queue.last().body += item-template(..qe)
       let _ = cur.pop()
       let _ = cur-max.pop()
-      let _ = cur-type.pop()
+      if cur-type.len() > 0 {
+        let _ = cur-type.pop()
+      }
       depth -= 1
       cur.last() += 1
       continue
     }
+    // Deep-first search current element
     let c = 0
     elem = children
     while c <= depth {
@@ -74,34 +91,40 @@
         cur-number.push(none)
       }
       // Find marker
-      if depth > 0 and cur-type.len() <= depth {
+      if cur-type.len() == 0 {
+        cur-type.push("list")
+      } else if cur-type.len() <= depth {
+        cur-type.push("list")
         if cur-type.at(depth - 1) == "enum" {
           cur-marker = 0
         } else {
           cur-marker = mod(cur-marker + 1, marker.len())
         }
       }
-      let label = box(width: 1em, marker.at(mod(cur-marker, marker.len())))
+      let label = marker.at(cur-marker)
       if "children" in elem.body.fields() {
         queue.push((
           label: label,
+          label-width: 1em,
           body: []
         ))
-        cur-type.push("list")
         depth += 1
         cur.push(0)
         cur-max.push(elem.body.children.len())
       } else {
         queue.push((
           label: label,
+          label-width: 1em,
           body: elem.body
         ))
         cur.at(depth) += 1
         let qe = queue.pop()
-        queue.last().body += item-template(qe)
+        queue.last().body += item-template(..qe)
       }
     } else if elem.func() == enum.item {
-      if depth > 0 and cur-type.len() <= depth {
+      if cur-type.len() == 0 {
+        cur-type.push("enum")
+      } else if cur-type.len() <= depth {
         cur-type.push("enum")
         if cur-type.at(depth - 1) == "list" {
           cur-numberer = 0
@@ -116,14 +139,12 @@
       }
       let number = cur-number.at(depth)
       cur-number.at(depth) += 1
-      let label = box(
-        width: 1em,
-        inset: (right: 4pt),
-        align(right, numbering(numberer.at(cur-numberer), number))
-      )
+      let label = numbering(numberer.at(cur-numberer), number)
       if "children" in elem.body.fields() {
         queue.push((
           label: label,
+          label-width: 2em,
+          alignment: right,
           body: []
         ))
         depth += 1
@@ -132,11 +153,13 @@
       } else {
         queue.push((
           label: label,
+          label-width: 2em,
+          alignment: right,
           body: elem.body
         ))
         cur.at(depth) += 1
         let qe = queue.pop()
-        queue.last().body += item-template(qe)
+        queue.last().body += item-template(..qe)
       }
     } else {
       queue.last().body += elem
@@ -214,13 +237,13 @@
       }
 
       show list: body => {
-        show: block.with(above: 1em, below: 1em, inset: (left: 1em))
+        show: block.with(above: 1em, below: 1em, inset: (left: 2em))
         set par(spacing: .6em)
         enumitem(body.children)
       }
 
       show enum: body => {
-        show: block.with(above: 1em, below: 1em, inset: (left: 1em))
+        show: block.with(above: 1em, below: 1em, inset: (left: 2em))
         set par(spacing: .6em)
         enumitem(body.children)
       }
