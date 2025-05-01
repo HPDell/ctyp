@@ -1,0 +1,12 @@
+[package]
+name = "ctyp"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["HPDell <https://github.com/hpdell>"]
+license = "MIT-0"
+description = "A Typst package for Chinese typography."
+
+[template]
+path = "template"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"
