@@ -8,6 +8,81 @@
   fang: "FandolFang R"
 )
 
+#let mod(x, y) = {
+  if x < y {
+    x
+  } else {
+    int(calc.round(calc.fract(x / y) * y))
+  }
+}
+
+#let enumitem(body) = {
+  let item-template(label-skip: 1em, hanging: 1em, item) = block(
+    inset: (left: 1em),
+    above: .6em,
+    {
+      set par(first-line-indent: (amount: 0em, all: true), hanging-indent: 0em)
+      box(width: 0em, move(item.marker, dx: -1em))
+      item.body
+    }
+  )
+  let cur = (0,)
+  let queue = ((
+    marker: none,
+    body: []
+  ),)
+  let cur-max = (body.children.len(),)
+  let depth = 0
+  let doc = []
+  while cur.at(0) < cur-max.at(0) {
+    if cur.at(depth) >= cur-max.at(depth) {
+      let qe = queue.pop()
+      queue.last().body += item-template(qe)
+      let _ = cur.pop()
+      let _ = cur-max.pop()
+      depth -= 1
+      cur.last() += 1
+      continue
+    }
+    let c = 0
+    let elem = body
+    while c <= depth {
+      elem = if elem.func() == list {
+        elem.children.at(cur.at(c))
+      } else if elem.func() == list.item {
+        elem.body.children.at(cur.at(c))
+      } else {
+        elem
+      }
+      c += 1
+    }
+    if elem.func() == list.item {
+      let marker = box(width: 1em, body.marker.at(mod(depth, body.marker.len())))
+      if "children" in elem.body.fields() {
+        queue.push((
+          marker: marker,
+          body: []
+        ))
+        depth += 1
+        cur.push(0)
+        cur-max.push(elem.body.children.len())
+      } else {
+        queue.push((
+          marker: marker,
+          body: elem.body
+        ))
+        cur.at(depth) += 1
+        let qe = queue.pop()
+        queue.last().body += item-template(qe)
+      }
+    } else {
+      queue.last().body += elem
+      cur.at(depth) += 1
+    }
+  }
+  queue.pop().body
+}
+
 #let _font-latin-cover(font, latin: none) = {
   if type(latin) == str {
     (
@@ -72,6 +147,13 @@
             "——" + body.attribution
           })
         }
+      }
+      
+
+      show list: body => context {
+        show: block.with(above: 1em, below: 1em, inset: (left: 1em))
+        set par(spacing: .6em)
+        enumitem(body)
       }
       
       show: remove-cjk-break-space
