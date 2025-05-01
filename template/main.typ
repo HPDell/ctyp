@@ -2,6 +2,8 @@
 
 #set document(title: "CTYP 说明", author: "作者")
 
+#let (theme, ..fonts) = ctyp()
+
 #let maketitle() = context {
   block(width: 100%, {
     show: strong
@@ -10,13 +12,13 @@
     document.title
   })
   block(width: 100%, {
-    show: kai
+    show: fonts.kai
     set text(size: 1.2em)
     set align(center + horizon)
     document.author.join()
   })
 }
 
-#show: ctyp
+#show: theme
 
 #maketitle()
