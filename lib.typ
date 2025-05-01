@@ -19,18 +19,33 @@
 #let enumitem(
   marker: (sym.circle.filled, sym.triangle.r.filled, sym.dash),
   numberer: ("1)", "a)", "i)"),
+  tight: true,
+  indent: 0em,
+  body-indent: 0.5em,
+  spacing: auto,
+  label-sep: 0em,
+  marker-width: 0.5em,
+  number-width: 1.5em,
   children
-) = {
+) = context {
+  let spacing = if spacing == auto {
+    if tight {
+      par.leading
+    } else {
+      par.spacing
+    }
+  }
   let item-template(
     label-width: 1em,
-    label-sep: 4pt,
-    hanging: 1em,
+    label-sep: label-sep,
     alignment: left,
     label: [],
     body: []
   ) = block(
-    inset: (left: hanging),
-    above: .6em,
+    inset: (left: indent + label-width + body-indent),
+    stroke: green + 1pt,
+    above: spacing,
+    below: spacing,
     {
       set par(first-line-indent: (amount: 0em, all: true), hanging-indent: 0em)
       box(
@@ -38,10 +53,10 @@
         move(box(
           width: label-width,
           inset: (right: label-sep),
+          stroke: red,
           align(alignment, label)
-        ), dx: -label-width)
-      )
-      body
+        ), dx: - label-width - body-indent)
+      ) + body
     }
   )
   let queue = ((
@@ -55,7 +70,6 @@
   let cur-marker = 0
   let cur-numberer = 0
   let depth = 0
-  let doc = []
   let elem = children
   let elem-last = none
   while cur.at(0) < cur-max.at(0) {
@@ -105,7 +119,7 @@
       if "children" in elem.body.fields() {
         queue.push((
           label: label,
-          label-width: 1em,
+          label-width: marker-width,
           body: []
         ))
         depth += 1
@@ -114,7 +128,7 @@
       } else {
         queue.push((
           label: label,
-          label-width: 1em,
+          label-width: marker-width,
           body: elem.body
         ))
         cur.at(depth) += 1
@@ -143,7 +157,7 @@
       if "children" in elem.body.fields() {
         queue.push((
           label: label,
-          label-width: 2em,
+          label-width: number-width,
           alignment: right,
           body: []
         ))
@@ -153,7 +167,7 @@
       } else {
         queue.push((
           label: label,
-          label-width: 2em,
+          label-width: number-width,
           alignment: right,
           body: elem.body
         ))
@@ -237,13 +251,13 @@
       }
 
       show list: body => {
-        show: block.with(above: 1em, below: 1em, inset: (left: 2em))
+        show: block.with(above: 1em, below: 1em, inset: (left: 0em))
         set par(spacing: .6em)
         enumitem(body.children)
       }
 
       show enum: body => {
-        show: block.with(above: 1em, below: 1em, inset: (left: 2em))
+        show: block.with(above: 1em, below: 1em, inset: (left: 0em))
         set par(spacing: .6em)
         enumitem(body.children)
       }
