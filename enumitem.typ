@@ -39,12 +39,15 @@
     below: spacing,
     {
       set par(first-line-indent: (amount: 0em, all: true), hanging-indent: 0em)
-      place(box(
-        width: label-width,
-        inset: (right: label-sep),
-        stroke: if (debug) { red } else { none },
-        align(alignment, label)
-      ), dx: - label-width - body-indent) + body
+      box(
+        width: 0em,
+        move(box(
+          width: label-width,
+          inset: (right: label-sep),
+          stroke: if (debug) { red } else { none },
+          align(alignment, label)
+        ), dx: - label-width - body-indent)
+      ) + body
     }
   )
   let queue = ((
