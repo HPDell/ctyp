@@ -1,6 +1,6 @@
 #import "@local/ctyp:0.1.0": *
 
-#set document(title: "CTYP 说明", author: "作者")
+#set document(title: "标题", author: "作者")
 
 #let (theme, ..fonts) = ctyp()
 
