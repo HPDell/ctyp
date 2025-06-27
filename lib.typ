@@ -1,62 +1,90 @@
 #import "@preview/cjk-unbreak:0.1.0": remove-cjk-break-space
+#import "fonts/fandol.typ": fandol-fontset
 #import "enumitem.typ": enumitem
 
-#let fontset-fandol = (
-  song: "FandolSong",
-  hei: "FandolHei",
-  kai: "FandolKai",
-  fang: "FandolFang R"
+#let _default-font-cjk-map = (
+  text: "serif",
+  strong: "sans",
+  emph: "mono",
+  heading: "serif",
 )
 
-#let _font-latin-cover(font, latin: none) = {
-  if type(latin) == str {
-    (
-      (
-        name: latin,
-        covers: "latin-in-cjk"
-      ),
-      font
-    )
-  } else if latin == none {
-    font
-  } else {
-    panic("latin must be a string or none")
-  }
-}
-
 #let ctyp(
-  font-cjk: (:),
-  font-latin: "Libertinus Serif",
-  fontset: fontset-fandol,
+  font-cjk: fandol-fontset,
+  font-cjk-map: _default-font-cjk-map,
+  font-latin: auto,
   fix-list-enum: true
 ) = {
+  // Merge font-cjk-map with default options.
+  let font-cjk-map = (:.._default-font-cjk-map, ..font-cjk-map)
+
+  /// This function wraps the given font with a Latin cover.
+  let _font-latin-cover(element) = {
+    
+    // Extract CJK font name
+    let font-identifier = font-cjk-map.at(element)
+    let (shape, ..variant) = font-identifier.split(":")
+    let font-family = font-cjk.at(font-identifier)
+    let font-name = if variant.len() > 0 {
+      font-family.last().at(variant, default: font-family.first())
+    } else {
+      font-family.first()
+    }
+
+    // Cover CJK font with Latin font.
+    let font-latin = if font-latin == auto {
+      "Linux Libertine"
+    } else if font-latin == none {
+      font-name
+    } else if type(font-latin) == str {
+      font-latin
+    } else {
+      panic("latin must be a string, auto or none")
+    }
+    (
+      (
+        name: font-latin,
+        covers: "latin-in-cjk"
+      ),
+      font-name
+    )
+  }
+
   let theme = (body) => {
     set text(lang: "zh")
 
-    set text(font: _font-latin-cover(fontset.at(font-cjk.at("main", default: "song")), latin: font-latin))
-    
-    show emph: set text(font: _font-latin-cover(fontset.at(font-cjk.at("emph", default: "kai")), latin: font-latin))
-
-    show strong: set text(
-      font: _font-latin-cover(fontset.at(font-cjk.at("strong", default: "song")), latin: font-latin),
-      weight: if font-cjk.at("strong", default: "song") == "hei" { 
-        "thin" 
-      } else { "bold" }
+    /// [Font Settings] Begin
+    /// This region apply fonts to default text, emph, and strong.
+    set text(font: _font-latin-cover("text"))
+    show emph: set text(
+      font: _font-latin-cover("emph"),
+      style: "italic"
     )
+    show strong: set text(
+      font: _font-latin-cover("strong"),
+      weight: "bold"
+    )
+    show heading: set text(
+      font: _font-latin-cover("heading"),
+      weight: "bold"
+    )
+    /// [Font Settings] End
     
+    /// [Paragraph Settings] Begin
+    /// This region apply paragraph settings to specific elements.
     set par(first-line-indent: (amount: 2em, all: true), justify: true)
     
     show heading: set block(above: 1em, below: 1em)
     set heading(numbering: "1.1.")
-    
     show quote.where(block: false): set par(
       first-line-indent: (amount: 1em, all: true)
     )
-    
     show quote.where(block: false).and(quote.where(quotes: false)): set par(
       first-line-indent: (amount: 2em, all: true)
     )
+    /// [Paragraph Settings] End
     
+    /// [Other Settings] Begin
     show quote.where(block: true): body => {
       show: block
       show: pad.with(x: 2em)
@@ -73,9 +101,9 @@
         })
       }
     }
-    
     show: remove-cjk-break-space
-
+    /// [Other Settings] End
+    
     body
   }
   if (fix-list-enum) {
@@ -94,15 +122,11 @@
       body
     }
   }
-  let song = (body, weight: "regular") => text(font: _font-latin-cover(fontset-fandol.song, latin: font-latin), weight: weight, body)
-  let hei = (body, weight: "thin") => text(font: _font-latin-cover(fontset-fandol.hei, latin: font-latin), weight: weight, body)
-  let fang = (body, weight: "regular") => text(font: _font-latin-cover(fontset-fandol.fang, latin: font-latin), weight: weight, body)
-  let kai = (body, weight: "regular") => text(font: _font-latin-cover(fontset-fandol.kai, latin: font-latin), weight: weight, body)
+  let font-utils = font-cjk.family.pairs().map(((k, v)) => {
+    (k, (body) => text(font: v, weight: "regular", body))
+  }).to-dict()
   (
     theme: theme,
-    song: song,
-    hei: hei,
-    fang: fang,
-    kai: kai
+    ..font-utils
   )
 }
