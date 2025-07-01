@@ -3,7 +3,7 @@ name = "ctyp"
 version = "0.1.0"
 entrypoint = "lib.typ"
 authors = ["HPDell <https://github.com/hpdell>"]
-license = "MIT-0"
+license = "GPL-3.0"
 description = "A Typst package for Chinese typography."
 
 [template]
