@@ -1,9 +1,11 @@
+#import "@local/ctyp:0.1.0": ctyp, fandol-fontset, page-grid
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.8": *
+#codly(languages: codly-languages)
 #import "@preview/theorion:0.3.3": cosmos
 #import cosmos.default: *
-#codly(languages: codly-languages)
-#import "@local/ctyp:0.1.0": ctyp, fandol-fontset
+
+#show: page-grid
 #let (ctypset, cjk) = ctyp(
   font-latin: (
     mono: "JetBrainsMono NF",
@@ -171,4 +173,26 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 )
 #show: theme
 ```
+]
+
+= 页面设置
+
+通常中文环境下，对页面的设置是基于字符数的。
+该包提供了一个 `page-grid()` 函数，可以根据字符数设置页面的边距。
+该函数接收 `page()` 函数的 `margin` 参数的所有合法值，但是对于 `width` 和 `height` 参数，必须是整数，表示字符的数量。
+
+#tip-box(title: [页面设置])[
+```typ
+#import "@local/ctyp:0.1.0": page-grid
+#show: page-grid.with(
+  width: 45,
+  height: 70
+)
+```
+]
+
+#note-box[
+  由于 Typst 的限制，页面设置不能放在 `ctyp()` 函数中。
+  目前采用的是提供单独的 `page-grid()` 函数来设置页面。
+  这也有一些额外的好处，例如可以与其他包结合使用。
 ]
