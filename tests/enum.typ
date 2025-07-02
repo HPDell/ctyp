@@ -1,5 +1,5 @@
 #import "../lib.typ": *
-#let (theme, song, hei, kai, fang) = ctyp()
+#let (theme, _) = ctyp()
 #show: theme
 
 + 编号项目1

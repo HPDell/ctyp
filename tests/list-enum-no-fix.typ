@@ -1,10 +1,6 @@
 #import "../lib.typ": *
-#let (theme, song, hei, kai, fang) = ctyp(
+#let (theme, _) = ctyp(
   fix-list-enum: false,
-  fontset: (
-    ..fontset-fandol,
-    song: "FZNewShuSong-Z10S",
-  )
 )
 #show: theme
 

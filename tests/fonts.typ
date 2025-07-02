@@ -1,5 +1,5 @@
 #import "../lib.typ": *
-#let (theme, song, hei, kai, fang) = ctyp()
+#let (theme, (song, hei, kai, fang)) = ctyp()
 #show: theme
 
 = 《浪淘沙·九曲黄河万里沙》
@@ -9,7 +9,7 @@
 白发渔樵江渚上，#hei[惯看秋月春风]。一壶浊酒喜相逢。古今多少事，都付笑谈中。
 
 
-#let (theme, song, hei, kai, fang) = ctyp(
+#let (theme, (song, hei, kai, fang)) = ctyp(
   font-cjk-map: (
     heading: "hei"
   ),

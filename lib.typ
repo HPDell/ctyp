@@ -133,7 +133,7 @@
     (k, (body) => text(font: v.name, weight: "regular", body))
   }).to-dict()
   (
-    theme: theme,
-    ..font-utils
+    theme,
+    font-utils
   )
 }
