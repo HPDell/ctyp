@@ -6,10 +6,10 @@
     fang: (name: "FandolFang R"),
   ),
   map: (
-    text: "song",
-    strong: "hei",
-    emph: "kai",
-    raw: "fang",
-    heading: "song:bold"
+    text: (cjk: "song", latin: "serif"),
+    strong: (cjk: "hei", latin: "serif"),
+    emph: (cjk: "kai", latin: "serif"),
+    raw: (cjk: "fang", latin: "mono"),
+    heading: (cjk: "song:bold", latin: "serif"),
   )
 )

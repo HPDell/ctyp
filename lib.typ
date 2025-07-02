@@ -2,11 +2,16 @@
 #import "fonts/fandol.typ": fandol-fontset
 #import "enumitem.typ": enumitem
 
+#let _default-font-latin = (
+  serif: "Libertinus Serif",
+  sans: "Libertinus Sans",
+  mono: "Libertinus Mono",
+)
 
 #let ctyp(
   fontset-cjk: auto,
   font-cjk-map: (:),
-  font-latin: auto,
+  font-latin: (:),
   fix-list-enum: true
 ) = {
   // Merge font-cjk-map with default options.
@@ -19,37 +24,44 @@
   }
   let font-cjk = fontset-cjk.family
   let font-cjk-map = (:..fontset-cjk.map, ..font-cjk-map)
+  let font-latin = (:.._default-font-latin, ..font-latin)
 
   /// This function wraps the given font with a Latin cover.
-  let _font-latin-cover(element) = {
-    
-    // Extract CJK font name
+  let _font-latin-cover(element) = {// Extract CJK font name
     let font-identifier = font-cjk-map.at(element)
-    let (shape, ..variant) = font-identifier.split(":")
+    let (shape, ..variant) = font-identifier.cjk.split(":")
     variant = if variant.len() > 0 { variant.first() } else { none }
     let font-family = font-cjk.at(shape)
-    let font-name = if variant == none or variant in font-family.variants {
+    let font-cjk-name = if variant == none or variant in font-family.variants {
       font-family.name
     } else {
       font-cjk.values().first().name
     }
 
+    let latin = font-latin.at(font-identifier.latin, default: "Libertinus Serif")
+
     // Cover CJK font with Latin font.
-    let font-latin = if font-latin == auto {
-      "Libertinus Serif"
-    } else if font-latin == none {
-      font-name
-    } else if type(font-latin) == str {
-      font-latin
+    let latin = if latin == auto {
+      if font-latin == auto { 
+        "Libertinus Serif"
+      } else if type(font-latin) == str {
+        font-latin
+      } else {
+        panic("font-latin must be a string or auto")
+      }
+    } else if latin == none {
+      font-cjk-name
+    } else if type(latin) == str {
+      latin
     } else {
       panic("latin must be a string, auto or none")
     }
     (
       (
-        name: font-latin,
+        name: latin,
         covers: "latin-in-cjk"
       ),
-      font-name
+      font-cjk-name
     )
   }
 
