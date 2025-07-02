@@ -7,7 +7,8 @@
 #let (ctypset, cjk) = ctyp(
   font-latin: (
     mono: "JetBrainsMono NF",
-  )
+  ),
+  fix-list-args: (inset: (left: 1em)),
 )
 #show: ctypset
 #show: codly-init

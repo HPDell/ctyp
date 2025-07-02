@@ -12,7 +12,9 @@
   fontset-cjk: auto,
   font-cjk-map: (:),
   font-latin: (:),
-  fix-list-enum: true
+  fix-list-enum: true,
+  fix-list-args: (:),
+  fix-enum-args: (:),
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
@@ -125,18 +127,16 @@
     
     body
   }
-  if (fix-list-enum) {
+  if fix-list-enum  {
     theme = (body) => {
       show: theme
       show list: body => {
-        show: block.with(above: 1em, below: 1em, inset: (left: 0em))
         set par(spacing: .6em)
-        enumitem(body.children)
+        enumitem(..fix-list-args, body.children)
       }
       show enum: body => {
-        show: block.with(above: 1em, below: 1em, inset: (left: 0em))
         set par(spacing: .6em)
-        enumitem(body.children)
+        enumitem(..fix-enum-args, body.children)
       }
       body
     }
