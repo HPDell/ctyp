@@ -17,7 +17,7 @@
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
     fandol-fontset
-  } else if type(fontset-cjk) == dict {
+  } else if type(fontset-cjk) == dictionary {
     fontset-cjk
   } else {
     panic("fontset-cjk must be a dict, auto or none")
