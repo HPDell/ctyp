@@ -1,17 +1,15 @@
 #let fandol-fontset = (
-  serif: ("FandolSong", (bold: "FandolSong", italic: "FandolSong", oblique: "FandolSong")),
-  sans: ("FandolHei", (bold: "FandolHei", italic: "FandolHei", oblique: "FandolHei")),
-  mono: ("FandolKai", (bold: "FandolKai", italic: "FandolKai", oblique: "FandolKai")),
   family: (
-    song: "FandolSong",
-    hei: "FandolHei",
-    kai: "FandolKai",
-    fang: "FandolFang R",
+    song: (name: "FandolSong", variants: ("bold",)),
+    hei: (name: "FandolHei", variants: ("bold",)),
+    kai: (name: "FandolKai"),
+    fang: (name: "FandolFang R"),
+  ),
+  map: (
+    text: "song",
+    strong: "hei",
+    emph: "kai",
+    raw: "fang",
+    heading: "song:bold"
   )
-)
-
-#let fandol-fontmap = (
-  regular: "serif",
-  strong: "sans",
-  emph: "mono",
 )

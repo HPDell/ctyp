@@ -2,21 +2,23 @@
 #import "fonts/fandol.typ": fandol-fontset
 #import "enumitem.typ": enumitem
 
-#let _default-font-cjk-map = (
-  text: "serif",
-  strong: "sans",
-  emph: "mono",
-  heading: "serif",
-)
 
 #let ctyp(
-  font-cjk: fandol-fontset,
-  font-cjk-map: _default-font-cjk-map,
+  fontset-cjk: auto,
+  font-cjk-map: (:),
   font-latin: auto,
   fix-list-enum: true
 ) = {
   // Merge font-cjk-map with default options.
-  let font-cjk-map = (:.._default-font-cjk-map, ..font-cjk-map)
+  let fontset-cjk = if fontset-cjk == auto {
+    fandol-fontset
+  } else if type(fontset-cjk) == dict {
+    fontset-cjk
+  } else {
+    panic("fontset-cjk must be a dict, auto or none")
+  }
+  let font-cjk = fontset-cjk.family
+  let font-cjk-map = (:..fontset-cjk.map, ..font-cjk-map)
 
   /// This function wraps the given font with a Latin cover.
   let _font-latin-cover(element) = {
@@ -24,16 +26,17 @@
     // Extract CJK font name
     let font-identifier = font-cjk-map.at(element)
     let (shape, ..variant) = font-identifier.split(":")
-    let font-family = font-cjk.at(font-identifier)
-    let font-name = if variant.len() > 0 {
-      font-family.last().at(variant, default: font-family.first())
+    variant = if variant.len() > 0 { variant.first() } else { none }
+    let font-family = font-cjk.at(shape)
+    let font-name = if variant == none or variant in font-family.variants {
+      font-family.name
     } else {
-      font-family.first()
+      font-cjk.values().first().name
     }
 
     // Cover CJK font with Latin font.
     let font-latin = if font-latin == auto {
-      "Linux Libertine"
+      "Libertinus Serif"
     } else if font-latin == none {
       font-name
     } else if type(font-latin) == str {
@@ -122,8 +125,8 @@
       body
     }
   }
-  let font-utils = font-cjk.family.pairs().map(((k, v)) => {
-    (k, (body) => text(font: v, weight: "regular", body))
+  let font-utils = fontset-cjk.family.pairs().map(((k, v)) => {
+    (k, (body) => text(font: v.name, weight: "regular", body))
   }).to-dict()
   (
     theme: theme,

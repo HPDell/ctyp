@@ -11,8 +11,8 @@
 
 #let (theme, song, hei, kai, fang) = ctyp(
   font-cjk-map: (
-    heading: "sans"
-  )
+    heading: "hei"
+  ),
 )
 #show: theme
 
