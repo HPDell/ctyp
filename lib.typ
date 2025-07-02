@@ -1,6 +1,7 @@
 #import "@preview/cjk-unbreak:0.1.0": remove-cjk-break-space
 #import "fonts/fandol.typ": fandol-fontset
 #import "enumitem.typ": enumitem
+#import "utils/page-grid.typ": page-grid
 
 #let _default-font-latin = (
   serif: "Libertinus Serif",
