@@ -67,6 +67,10 @@
       font: _font-latin-cover("strong"),
       weight: "bold"
     )
+    show raw: set text(
+      font: _font-latin-cover("raw"),
+      weight: "regular"
+    )
     show heading: set text(
       font: _font-latin-cover("heading"),
       weight: "bold"
