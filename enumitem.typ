@@ -8,6 +8,12 @@
 
 #let is-elem-item(elem) = elem.func() == enum.item or elem.func() == list.item
 
+#let default-block-args = (
+  above: 1em,
+  below: 1em,
+  inset: (left: 0em)
+)
+
 #let enumitem(
   marker: (sym.circle.filled.tiny, sym.triangle.r.filled, sym.dash),
   numberer: ("1)", "a)", "i)"),
@@ -19,8 +25,11 @@
   marker-width: 0.5em,
   number-width: 1.5em,
   debug: false,
+  ..block-args,
   children
 ) = context {
+  let block-args = (:..default-block-args, ..block-args.named())
+  show: block.with(..block-args)
   let spacing = if spacing == auto {
     if tight {
       par.leading
