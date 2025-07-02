@@ -6,6 +6,8 @@
   }
 }
 
+#let is-elem-item(elem) = elem.func() == enum.item or elem.func() == list.item
+
 #let enumitem(
   marker: (sym.circle.filled.tiny, sym.triangle.r.filled, sym.dash),
   numberer: ("1)", "a)", "i)"),
@@ -98,6 +100,9 @@
       // Find marker
       if cur-type.len() == 0 {
         cur-type.push("list")
+      } 
+      if depth == 0 {
+        cur-marker = 0
       } else if cur-type.len() <= depth {
         cur-type.push("list")
         if cur-type.at(depth - 1) == "enum" {
@@ -107,7 +112,7 @@
         }
       }
       let label = marker.at(cur-marker)
-      if "children" in elem.body.fields() {
+      if "children" in elem.body.fields() and elem.body.children.any(is-elem-item) {
         queue.push((
           label: label,
           label-width: marker-width,
@@ -129,6 +134,9 @@
     } else if elem.func() == enum.item {
       if cur-type.len() == 0 {
         cur-type.push("enum")
+      }
+      if depth == 0 {
+        cur-numberer = 0
       } else if cur-type.len() <= depth {
         cur-type.push("enum")
         if cur-type.at(depth - 1) == "list" {
@@ -145,7 +153,7 @@
       let number = cur-number.at(depth)
       cur-number.at(depth) += 1
       let label = numbering(numberer.at(cur-numberer), number)
-      if "children" in elem.body.fields() {
+      if "children" in elem.body.fields() and elem.body.children.any(is-elem-item) {
         queue.push((
           label: label,
           label-width: number-width,
