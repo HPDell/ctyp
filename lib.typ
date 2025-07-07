@@ -142,7 +142,7 @@
     }
   }
   let font-utils = fontset-cjk.family.pairs().map(((k, v)) => {
-    (k, (body) => text(font: v.name, weight: "regular", body))
+    (k, (body, weight: "regular") => text(font: v.name, weight: weight, body))
   }).to-dict()
   (
     theme,
