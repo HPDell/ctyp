@@ -6,7 +6,7 @@
 #let _default-font-latin = (
   serif: "Libertinus Serif",
   sans: "Libertinus Sans",
-  mono: "Libertinus Mono",
+  mono: "DejaVu Sans Mono",
 )
 
 #let ctyp(
