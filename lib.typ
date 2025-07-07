@@ -29,7 +29,7 @@
   let font-latin = (:.._default-font-latin, ..font-latin)
 
   /// This function wraps the given font with a Latin cover.
-  let _font-latin-cover(element) = {// Extract CJK font name
+  let _font-latin-cover(element, body) = {// Extract CJK font name
     let font-identifier = font-cjk-map.at(element)
     let (shape, ..variant) = font-identifier.cjk.split(":")
     variant = if variant.len() > 0 { variant.first() } else { none }
@@ -58,13 +58,14 @@
     } else {
       panic("latin must be a string, auto or none")
     }
-    (
+    set text(font: (
       (
         name: latin,
         covers: "latin-in-cjk"
       ),
       font-cjk-name
-    )
+    ))
+    body
   }
 
   let theme = (body) => {
@@ -72,23 +73,27 @@
 
     /// [Font Settings] Begin
     /// This region apply fonts to default text, emph, and strong.
-    set text(font: _font-latin-cover("text"))
-    show emph: set text(
-      font: _font-latin-cover("emph"),
-      style: "italic"
-    )
-    show strong: set text(
-      font: _font-latin-cover("strong"),
-      weight: "bold"
-    )
-    show raw: set text(
-      font: _font-latin-cover("raw"),
-      weight: "regular"
-    )
-    show heading: set text(
-      font: _font-latin-cover("heading"),
-      weight: "bold"
-    )
+    show: _font-latin-cover.with("text")
+    show emph: body => {
+      show: _font-latin-cover.with("emph")
+      set text(style: "italic")
+      body
+    }
+    show strong: body => {
+      show: _font-latin-cover.with("strong")
+      set text(weight: "bold")
+      body
+    }
+    show raw: body => {
+      show: _font-latin-cover.with("raw")
+      set text(weight: "regular")
+      body
+    }
+    show heading: body => {
+      show: _font-latin-cover.with("heading")
+      set text(weight: "bold")
+      body
+    }
     /// [Font Settings] End
     
     /// [Paragraph Settings] Begin
