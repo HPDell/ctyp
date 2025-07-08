@@ -34,7 +34,7 @@
     let (shape, ..variant) = font-identifier.cjk.split(":")
     variant = if variant.len() > 0 { variant.first() } else { none }
     let font-family = font-cjk.at(shape)
-    let font-cjk-name = if variant == none or variant in font-family.variants {
+    let font-cjk-name = if variant == none or variant == "regular" or variant in font-family.variants {
       font-family.name
     } else {
       font-cjk.values().first().name
@@ -58,13 +58,18 @@
     } else {
       panic("latin must be a string, auto or none")
     }
-    set text(font: (
-      (
-        name: latin,
-        covers: "latin-in-cjk"
-      ),
-      font-cjk-name
-    ))
+    set text(font: ((
+      name: latin,
+      covers: "latin-in-cjk"
+    ), font-cjk-name))
+    let _cjk-variant = if variant == "bold" { body => {
+      set text(weight: "bold")
+      body
+    } } else if variant == "regular" { body => {
+      set text(weight: 400)
+      body
+    } } else { body => body }
+    show regex("\p{Han}"): _cjk-variant
     body
   }
 
@@ -74,26 +79,10 @@
     /// [Font Settings] Begin
     /// This region apply fonts to default text, emph, and strong.
     show: _font-latin-cover.with("text")
-    show emph: body => {
-      show: _font-latin-cover.with("emph")
-      set text(style: "italic")
-      body
-    }
-    show strong: body => {
-      show: _font-latin-cover.with("strong")
-      set text(weight: "bold")
-      body
-    }
-    show raw: body => {
-      show: _font-latin-cover.with("raw")
-      set text(weight: "regular")
-      body
-    }
-    show heading: body => {
-      show: _font-latin-cover.with("heading")
-      set text(weight: "bold")
-      body
-    }
+    show emph: _font-latin-cover.with("emph")
+    show strong: _font-latin-cover.with("strong")
+    show raw: _font-latin-cover.with("raw")
+    show heading: _font-latin-cover.with("heading")
     /// [Font Settings] End
     
     /// [Paragraph Settings] Begin

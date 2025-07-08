@@ -1,7 +1,7 @@
 #let fandol-fontset = (
   family: (
-    song: (name: "FandolSong", variants: ("bold",)),
-    hei: (name: "FandolHei", variants: ("bold",)),
+    song: (name: "FandolSong", variants: ("bold")),
+    hei: (name: "FandolHei", variants: ("bold")),
     kai: (name: "FandolKai"),
     fang: (name: "FandolFang R"),
   ),
