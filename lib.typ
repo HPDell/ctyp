@@ -156,9 +156,25 @@
       body
     }
   }
-  let font-utils = fontset-cjk.family.pairs().map(((k, v)) => {
-    (k, (body, weight: "regular") => text(font: v.name, weight: weight, body))
-  }).to-dict()
+  let font-utils = fontset-cjk.family.pairs().map(((k, v)) => { (
+    k, 
+    (body, weight: "regular", latin: "serif") => {
+      let latin-font-name = if type(latin) == str {
+        if latin in font-latin.keys() {
+          font-latin.at(latin)
+        } else {
+          latin
+        }
+      } else {
+        panic("latin must be a string representing a font name or a font shape")
+      }
+      set text(font: (
+        (name: latin-font-name, covers: "latin-in-cjk"),
+        v.name
+      ), weight: weight)
+      body
+    }
+  ) }).to-dict()
   (
     theme,
     font-utils
