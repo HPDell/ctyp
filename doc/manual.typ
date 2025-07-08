@@ -132,13 +132,14 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 == 使用 CJK 字体
 
 函数 `ctyp()` 的返回值中的第二个元素 `cjk` 是一个字典。字典的键都来自于字体集合中 `family` 字段的键，也就是字形的名称；值是一个函数，直接使用可以修改内容的字体。
+这些函数提供一个参数 `weight` 用于设置字体粗细。
 
 #tip-box(title: [直接使用 CJK 字体])[
 ```typ
 #let (ctypset, cjk) = ctyp()
 #let (song, hei, kai, fang) = cjk
 - #song[这是宋体内容]
-- #hei[这是黑体内容]
+- #hei(weight: "bold")[这是黑体加粗内容]
 - #kai[这是楷体内容]
 - #fang[这是仿宋内容]
 ```
@@ -146,9 +147,20 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 #let (ctypset_, cjk_) = ctyp()
 #let (song, hei, kai, fang) = cjk_
 - #song[这是宋体内容]
-- #hei[这是黑体内容]
+- #hei(weight: "bold")[这是黑体加粗内容]
 - #kai[这是楷体内容]
 - #fang[这是仿宋内容]
+]
+
+这些函数中的西文字体默认使用 `ctyp()` 函数参数 `font-latin` 中的 `serif` 字体。
+若要修改西文字体，可以通过这些修改这些函数中的 `latin` 参数来实现，该参数接受 `font-latin` 中的键，或具体的字体名称。
+
+#tip-box(title: [使用CJK字体并设置西文字体])[
+  ```typ
+  #fang(latin: "mono")[使用仿宋体和 monospace 西文字体。]
+  ```
+  
+  #fang(latin: "mono")[使用仿宋体和 monospace 西文字体。]
 ]
 
 = 列表
