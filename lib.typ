@@ -8,6 +8,23 @@
   mono: "DejaVu Sans Mono",
 )
 
+#let _default-weight-map = (
+  "thin": 100,
+  "extralight": 300,
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+  "heavy": 900,
+)
+
+#let _apply-font-to-cjk(..args, body) = {
+  show regex("\p{Han}"): set text(..args)
+  body
+}
+
 #let ctyp(
   fontset-cjk: auto,
   font-cjk-map: (:),
@@ -15,6 +32,7 @@
   fix-list-enum: true,
   fix-list-args: (:),
   fix-enum-args: (:),
+  reset-strong-delta: 0
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
@@ -29,10 +47,10 @@
   let font-latin = (:.._default-font-latin, ..font-latin)
 
   /// This function wraps the given font with a Latin cover.
-  let _font-latin-cover(element, body) = {// Extract CJK font name
+  let _font-latin-cover(element) = {// Extract CJK font name
     let font-identifier = font-cjk-map.at(element)
-    let (shape, ..variant) = font-identifier.cjk.split(":")
-    variant = if variant.len() > 0 { variant.first() } else { none }
+    let (shape, ..variants) = font-identifier.cjk.split(":")
+    let variant = if variants.len() > 0 { variants.first() } else { none }
     let font-family = font-cjk.at(shape)
     let font-cjk-name = if variant == none or variant == "regular" or variant in font-family.variants {
       font-family.name
@@ -58,19 +76,14 @@
     } else {
       panic("latin must be a string, auto or none")
     }
-    set text(font: ((
-      name: latin,
-      covers: "latin-in-cjk"
-    ), font-cjk-name))
-    let _cjk-variant = if variant == "bold" { body => {
-      set text(weight: "bold")
-      body
-    } } else if variant == "regular" { body => {
-      set text(weight: 400)
-      body
-    } } else { body => body }
-    show regex("\p{Han}"): _cjk-variant
-    body
+    (
+      font: ((
+        name: latin,
+        covers: "latin-in-cjk"
+      ), font-cjk-name),
+      weight: if variant == none { 400 } else { _default-weight-map.at(variant, default: 400) }
+    )
+    
   }
 
   let theme = (body) => {
@@ -78,11 +91,19 @@
 
     /// [Font Settings] Begin
     /// This region apply fonts to default text, emph, and strong.
-    show: _font-latin-cover.with("text")
-    show emph: _font-latin-cover.with("emph")
-    show strong: _font-latin-cover.with("strong")
-    show raw: _font-latin-cover.with("raw")
-    show heading: _font-latin-cover.with("heading")
+    let font-select = ("text", "emph", "strong", "raw", "heading").map(k => (k, _font-latin-cover(k))).to-dict()
+    set text(font: font-select.text.font)
+    set strong(delta: if type(reset-strong-delta) == int {
+      reset-strong-delta
+    } else { 0 })
+    show emph: set text(font: font-select.emph.font)
+    show emph: _apply-font-to-cjk.with(weight: font-select.emph.weight)
+    show strong: set text(font: font-select.strong.font, weight: "bold")
+    show strong: _apply-font-to-cjk.with(weight: font-select.strong.weight)
+    show raw: set text(font: font-select.raw.font)
+    show raw: _apply-font-to-cjk.with(weight: font-select.raw.weight)
+    show heading: set text(font: font-select.heading.font)
+    show heading: _apply-font-to-cjk.with(weight: font-select.heading.weight)
     /// [Font Settings] End
     
     /// [Paragraph Settings] Begin
