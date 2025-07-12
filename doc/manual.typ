@@ -6,7 +6,7 @@
 #import cosmos.default: *
 
 #show: page-grid
-#let (ctypset, cjk) = ctyp(
+#let (ctypset, (song, hei, kai, fang)) = ctyp(
   fix-list-args: (inset: (left: 1em)),
 )
 #show: ctypset
@@ -118,17 +118,28 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
   *加粗的宋体内容，西文使用 Sans 字体*
 ]
 
+从上面的例子可以看到，*默认情况下 `strong` 元素使用黑体，而不加粗*。
+也就是和 `#hei(weight: "regular")[]` 的#hei(weight: "regular")[效果]相同。
+如果使用#hei(weight: "bold")[加粗的黑体]，则可能过粗。
+这通常也是 LaTeX 中的默认行为。
+如果偏好 Microsoft Word 的行为，即使用黑体的情况下加粗，那么可以在 `font-cjk-map` 中将对应元素的 `cjk` 字段增加一个 `:bold` 后缀。
+
+#important-box(title: [注意])[
+  为了实现这一效果，`strong` 元素的 `delta` 被设置为 `0`，并全局生效。如果这导致了异常的行为，可以在 `ctyp()` 函数中设置 `reset-strong-delta` 参数为 `300`，则恢复默认行为。
+  该值是 Typst 文档中标注的默认值。如果希望使用其他值，可以自行设置。
+]
 
 == 使用 CJK 字体
 
 函数 `ctyp()` 的返回值中的第二个元素 `cjk` 是一个字典。字典的键都来自于字体集合中 `family` 字段的键，也就是字形的名称；值是一个函数，直接使用可以修改内容的字体。
+这些函数提供一个参数 `weight` 用于设置字体粗细。
 
 #tip-box(title: [直接使用 CJK 字体])[
 ```typ
 #let (ctypset, cjk) = ctyp()
 #let (song, hei, kai, fang) = cjk
 - #song[这是宋体内容]
-- #hei[这是黑体内容]
+- #hei(weight: "bold")[这是黑体加粗内容]
 - #kai[这是楷体内容]
 - #fang[这是仿宋内容]
 ```
@@ -136,9 +147,20 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 #let (ctypset_, cjk_) = ctyp()
 #let (song, hei, kai, fang) = cjk_
 - #song[这是宋体内容]
-- #hei[这是黑体内容]
+- #hei(weight: "bold")[这是黑体加粗内容]
 - #kai[这是楷体内容]
 - #fang[这是仿宋内容]
+]
+
+这些函数中的西文字体默认使用 `ctyp()` 函数参数 `font-latin` 中的 `serif` 字体。
+若要修改西文字体，可以通过这些修改这些函数中的 `latin` 参数来实现，该参数接受 `font-latin` 中的键，或具体的字体名称。
+
+#tip-box(title: [使用CJK字体并设置西文字体])[
+  ```typ
+  #fang(latin: "mono")[使用仿宋体和 monospace 西文字体。]
+  ```
+  
+  #fang(latin: "mono")[使用仿宋体和 monospace 西文字体。]
 ]
 
 = 列表
@@ -147,7 +169,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 该包重新设置了列表的样式，使得列表项目符号与内容基线对齐。
 该功能默认开启。
 
-#tip-box(title: [修复后的列表])[
+#note-box(title: [修复后的列表])[
 + 项目1
 + 项目2
   - 项目2.1
