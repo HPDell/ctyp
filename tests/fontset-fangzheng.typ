@@ -1,11 +1,10 @@
 #import "../lib.typ": *
-#import "../fonts/fangzheng.typ": fangzheng-fontset
 #set page("a6")
 
 #set text(size: 10pt)
 
 #let (theme, cjk) = ctyp(
-  fontset-cjk: fangzheng-fontset
+  fontset-cjk: "fangzheng"
 )
 #show: theme
 
