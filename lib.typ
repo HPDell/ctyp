@@ -22,6 +22,7 @@
 
 #let _apply-font-to-cjk(..args, body) = {
   show regex("\p{Han}"): set text(..args)
+  show smartquote: set text(font: args.named().font.at(0).name)
   body
 }
 
@@ -93,17 +94,18 @@
     /// This region apply fonts to default text, emph, and strong.
     let font-select = ("text", "emph", "strong", "raw", "heading").map(k => (k, _font-latin-cover(k))).to-dict()
     set text(font: font-select.text.font)
+    show smartquote: set text(font: font-select.text.font.at(0).name)
     set strong(delta: if type(reset-strong-delta) == int {
       reset-strong-delta
     } else { 0 })
     show emph: set text(font: font-select.emph.font)
-    show emph: _apply-font-to-cjk.with(weight: font-select.emph.weight)
+    show emph: _apply-font-to-cjk.with(..font-select.emph)
     show strong: set text(font: font-select.strong.font, weight: "bold")
-    show strong: _apply-font-to-cjk.with(weight: font-select.strong.weight)
+    show strong: _apply-font-to-cjk.with(..font-select.strong)
     show raw: set text(font: font-select.raw.font)
-    show raw: _apply-font-to-cjk.with(weight: font-select.raw.weight)
+    show raw: _apply-font-to-cjk.with(..font-select.raw)
     show heading: set text(font: font-select.heading.font)
-    show heading: _apply-font-to-cjk.with(weight: font-select.heading.weight)
+    show heading: _apply-font-to-cjk.with(..font-select.heading)
     /// [Font Settings] End
     
     /// [Paragraph Settings] Begin
