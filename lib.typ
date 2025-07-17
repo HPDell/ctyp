@@ -20,12 +20,6 @@
   "heavy": 900,
 )
 
-#let _apply-font-to-cjk(..args, body) = {
-  show regex("\p{Han}"): set text(..args)
-  show smartquote: set text(font: args.named().font.at(0).name)
-  body
-}
-
 #let ctyp(
   fontset-cjk: auto,
   font-cjk-map: (:),
@@ -33,6 +27,7 @@
   fix-list-enum: true,
   fix-list-args: (:),
   fix-enum-args: (:),
+  fix-smartquote: true,
   reset-strong-delta: 0
 ) = {
   // Merge font-cjk-map with default options.
@@ -48,6 +43,15 @@
   let font-cjk = fontset-cjk.family
   let font-cjk-map = (:..fontset-cjk.map, ..font-cjk-map)
   let font-latin = (:.._default-font-latin, ..font-latin)
+
+  let _apply-font-to-cjk(..args, body) = {
+    show regex("\p{Han}"): set text(..args)
+    show: if fix-smartquote { (body) => {
+      show smartquote: set text(font: args.named().font.at(0).name)
+      body
+    }} else { (body) => body }
+    body
+  }
 
   /// This function wraps the given font with a Latin cover.
   let _font-latin-cover(element) = {// Extract CJK font name
@@ -96,7 +100,10 @@
     /// This region apply fonts to default text, emph, and strong.
     let font-select = ("text", "emph", "strong", "raw", "heading").map(k => (k, _font-latin-cover(k))).to-dict()
     set text(font: font-select.text.font)
-    show smartquote: set text(font: font-select.text.font.at(0).name)
+    show: if fix-smartquote { (body) => {
+      show smartquote: set text(font: font-select.text.font.at(0).name)
+      body
+    }} else { (body) => body }
     set strong(delta: if type(reset-strong-delta) == int {
       reset-strong-delta
     } else { 0 })

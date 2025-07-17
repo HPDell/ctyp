@@ -163,6 +163,21 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
   #fang(latin: "mono")[使用仿宋体和 monospace 西文字体。]
 ]
 
+== 智能引号（Smartquote）
+
+当中文与英文混杂时，如果通过 ```typ set text(lang: "zh")``` 设置了，Typst 在英文中也会使用中文的智能引号。
+为了修复这一问题，该包参考了#link("https://typst-doc-cn.github.io/guide/FAQ/smartquote-font.html")[“Typst 中文社区”]中提供的解决方案，将智能引号的字体设置为 Latin 字体。
+考虑到中文书写时，往往不会使用智能引号，而是依赖输入法进行输入；而使用英文时，却往往需要智能引号，尤其是在纯文本编辑器中。
+因此，该包默认开启了智能引号的字体设置。
+
+#warning-box[
+  该功能启用时，无论是中文还是英文，智能引号都会使用西文字体。反之，手动引号（使用 `sym.quote.l` 和 `sym.quote.r` 或与之相应的字符）都会使用中文字体。也就是说：
+  - 中文应当使用“手动引号”，使用"智能引号"则会使用西文字体。
+  - Users should use "smartquote" in Latin text; otherwise, “manual quotes” will result in CJK characters.
+]
+
+如果不喜欢该功能，可以将 `ctyp()` 函数的参数 `fix-smartquote` 设置为 `false`，则不修复智能引号字体。
+
 = 列表
 
 不论是编号列表还是符号列表，在使用中文时，很容易产生列表项目符号与内容基线不平的问题。
