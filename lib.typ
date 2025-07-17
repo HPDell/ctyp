@@ -1,5 +1,5 @@
 #import "@preview/cjk-unbreak:0.1.0": remove-cjk-break-space
-#import "fonts/fandol.typ": fandol-fontset
+#import "fonts/index.typ": *
 #import "enumitem.typ": enumitem
 #import "utils/page-grid.typ": page-grid
 
@@ -40,8 +40,10 @@
     fandol-fontset
   } else if type(fontset-cjk) == dictionary {
     fontset-cjk
+  } else if type(fontset-cjk) == str and fontset-cjk in packed-fontset.keys() {
+    packed-fontset.at(fontset-cjk)
   } else {
-    panic("fontset-cjk must be a dict, auto or none")
+    panic("fontset-cjk must be a dict, auto or one of the packed fontsets: " + packed-fontset.keys().join(", "))
   }
   let font-cjk = fontset-cjk.family
   let font-cjk-map = (:..fontset-cjk.map, ..font-cjk-map)
