@@ -148,7 +148,6 @@
         })
       }
     }
-    show: remove-cjk-break-space
     /// [Other Settings] End
     
     body
@@ -166,6 +165,11 @@
       }
       body
     }
+  }
+  theme = (body) => {
+    show: theme
+    show: remove-cjk-break-space
+    body
   }
   let font-utils = fontset-cjk.family.pairs().map(((k, v)) => { (
     k, 
