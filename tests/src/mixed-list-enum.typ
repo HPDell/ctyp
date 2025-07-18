@@ -1,4 +1,6 @@
-#import "../lib.typ": *
+#import "../../lib.typ": *
+#import "../template.typ": testcase
+#show: testcase
 #let (theme, _) = ctyp()
 #show: theme
 
@@ -8,7 +10,7 @@
     - `variants`：这个字体包含的所有变体。
 - `map`：一个字典，列出各种元素所使用的 CJK 字体和西文字体对应关系。
   - `[element]`：元素的名称
-    - `cjk`：CJK 字体映射，格式为 `"family":"variant"`。其中 `family` 是 `family` 中的键，`variant` 是 `variants` 中的值。若指定了不再存在的变体，认为该字体不存在，回归使用 `family` 字典中的第一个字体。
+    - `cjk`：CJK 字体映射，格式为 `"family":"variant"`。其中 `family` 是 `family` 中的键，`variant` 是 `variants` 中的值。
     - `latin`：西文字体映射，可选项是 `"serif"`, `"sans"`, `"mono"` 或者字体名称。
       - `serif`：使用衬线字体。
       - `sans`：使用无衬线字体。

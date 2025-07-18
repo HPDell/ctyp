@@ -1,4 +1,6 @@
-#import "../lib.typ": ctyp, page-grid
+#import "../../lib.typ": ctyp, page-grid
+#import "../template.typ": testcase
+#show: testcase
 #let (ctypset, cjk) = ctyp()
 #show: page-grid
 #show: ctypset

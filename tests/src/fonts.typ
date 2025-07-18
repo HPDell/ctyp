@@ -1,4 +1,6 @@
-#import "../lib.typ": *
+#import "../../lib.typ": *
+#import "../template.typ": testcase
+#show: testcase
 #let (theme, (song, hei, kai, fang)) = ctyp()
 #show: theme
 
