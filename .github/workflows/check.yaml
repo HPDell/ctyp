@@ -34,7 +34,7 @@ jobs:
           fi
       - name: Run CTyp tests
         run: |
-          bash compile.sh
+          bash compile.sh --skip
           status_output=$(git status --porcelain)
           if [ -n "$status_output" ]; then
             echo "Test failed. The following files are not consistent with the expected output:"
