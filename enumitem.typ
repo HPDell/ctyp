@@ -15,7 +15,7 @@
 )
 
 #let enumitem(
-  marker: (sym.circle.filled.tiny, sym.triangle.r.filled, sym.dash),
+  marker: (sym.circle.filled, sym.triangle.r.filled, sym.dash),
   numberer: ("1)", "a)", "i)"),
   tight: true,
   indent: 0em,

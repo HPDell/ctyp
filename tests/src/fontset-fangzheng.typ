@@ -1,5 +1,8 @@
-#import "../lib.typ": *
-#set page("a6")
+#import "../../lib.typ": *
+#import "../template.typ": testcase
+#show: testcase.with(page-args: (
+  paper: "a6"
+))
 
 #set text(size: 10pt)
 

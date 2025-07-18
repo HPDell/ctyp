@@ -1,5 +1,6 @@
-#import "../lib.typ": *
-#set page("a6")
+#import "../../lib.typ": *
+#import "../template.typ": testcase
+#show: testcase
 
 #[
   #let (theme, (song, hei, kai, fang)) = ctyp()

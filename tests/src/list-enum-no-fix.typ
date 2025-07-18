@@ -1,4 +1,6 @@
-#import "../lib.typ": *
+#import "../../lib.typ": *
+#import "../template.typ": testcase
+#show: testcase
 #let (theme, _) = ctyp(
   fix-list-enum: false,
 )

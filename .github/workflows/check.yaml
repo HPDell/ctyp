@@ -1,0 +1,44 @@
+name: "Run CTyp tests"
+
+on:
+  push:
+    branches:
+      - main
+      - test/*
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v3
+      - name: Install Fandol fonts
+        run: |
+          FONT_DIR=~/.local/share/fonts/opentype/fandol
+          mkdir -p $FONT_DIR
+          wget "https://mirrors.ctan.org/fonts/fandol.zip"
+          unzip fandol.zip -d $FONT_DIR && rm fandol.zip
+          fc-cache -fv
+          if typst fonts | grep -q Fandol; then
+            echo "Fandol fonts installed successfully."
+          else
+            echo "Fandol fonts installation failed."
+            exit 1
+          fi
+      - name: Run CTyp tests
+        run: |
+          bash compile.sh --skip
+          status_output=$(git status --porcelain)
+          if [ -n "$status_output" ]; then
+            echo "Test failed. The following files are not consistent with the expected output:"
+            echo "$status_output"
+            exit 1
+          fi
+        working-directory: tests
