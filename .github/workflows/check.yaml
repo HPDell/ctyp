@@ -26,7 +26,12 @@ jobs:
           wget "https://mirrors.ctan.org/fonts/fandol.zip"
           unzip fandol.zip -d $FONT_DIR && rm fandol.zip
           fc-cache -fv
-          typst fonts | grep -q Fandol
+          if typst fonts | grep -q Fandol; then
+            echo "Fandol fonts installed successfully."
+          else
+            echo "Fandol fonts installation failed."
+            exit 1
+          fi
       - name: Run CTyp tests
         run: |
           bash compile.sh
