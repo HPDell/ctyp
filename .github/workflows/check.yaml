@@ -3,13 +3,13 @@ name: "Run CTyp tests"
 on:
   push:
     branches:
-      - main
+      - master
       - test/*
     tags:
       - 'v*'
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   test:
