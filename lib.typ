@@ -26,7 +26,7 @@
 
 #let _default-font-functions = (
   "highlight": highlight,
-  "underline": underline,
+  "underline": underline.with(offset: 2pt),
   "strike": strike,
 )
 
