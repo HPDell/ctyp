@@ -3,6 +3,8 @@
 #import "enumitem.typ": enumitem
 #import "utils/page-grid.typ": page-grid
 
+#let _default-cjk-regex = "[\p{Han}\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u201c\u201d\u2018\u2019\uff08\uff09\u300a\u300b\u3008\u3009\u3010\u3011\u300e\u300f\u300c\u300d\uff43\uff44\u3014\u3015\u2026\u2014\uff5e\uff4f\uffe5]"
+
 #let _default-font-latin = (
   serif: "Libertinus Serif",
   mono: "DejaVu Sans Mono",
@@ -18,6 +20,14 @@
   "bold": 700,
   "extrabold": 800,
   "heavy": 900,
+)
+
+#let _default-font-styles = ("normal", "italic", "oblique")
+
+#let _default-font-functions = (
+  "highlight": highlight,
+  "underline": underline.with(offset: 2pt),
+  "strike": strike,
 )
 
 #let ctyp(
@@ -45,7 +55,14 @@
   let font-latin = (:.._default-font-latin, ..font-latin)
 
   let _apply-font-to-cjk(..args, body) = {
-    show regex("\p{Han}"): set text(..args)
+    let text-args = args.named()
+    let cjk-function = text
+    if text-args.style in _default-font-functions.keys() {
+      cjk-function = _default-font-functions.at(text-args.style)
+      text-args.style = "normal"
+    }
+    show regex(_default-cjk-regex): set text(..text-args)
+    show regex(_default-cjk-regex): cjk-function
     show: if fix-smartquote { (body) => {
       show smartquote: set text(font: args.named().font.at(0).name)
       body
@@ -57,9 +74,20 @@
   let _font-latin-cover(element) = {// Extract CJK font name
     let font-identifier = font-cjk-map.at(element)
     let (shape, ..variants) = font-identifier.cjk.split(":")
-    let variant = if variants.len() > 0 { variants.first() } else { none }
+    // let variant = if variants.len() > 0 { variants.first() } else { none }
     let font-family = font-cjk.at(shape)
-    let font-cjk-name = if variant == none or variant == "regular" or variant in font-family.variants {
+    let font-weight = "regular"
+    let font-style = "normal"
+    for variant in variants {
+      if variant in _default-weight-map.keys() {
+        font-weight = variant
+      } else if variant in (.._default-font-styles, .._default-font-functions.keys()) {
+        font-style = variant
+      }
+    }
+    let font-cjk-name = if font-weight == none or font-weight == "regular" or font-weight in font-family.variants {
+      font-family.name
+    } else if variant in _default-font-styles {
       font-family.name
     } else {
       font-cjk.values().first().name
@@ -88,7 +116,8 @@
         name: latin,
         covers: "latin-in-cjk"
       ), font-cjk-name),
-      weight: if variant == none { 400 } else { _default-weight-map.at(variant, default: 400) }
+      weight: if font-weight == none { 400 } else { _default-weight-map.at(font-weight, default: 400) },
+      style: font-style
     )
     
   }

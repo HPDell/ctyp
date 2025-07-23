@@ -1,1 +1,3 @@
 fontset-fangzheng.typ
+fontset-source.typ
+fontset-noto.typ
