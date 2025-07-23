@@ -3,12 +3,7 @@
 #import "enumitem.typ": enumitem
 #import "utils/page-grid.typ": page-grid
 
-#let _default-cjk-regex = "[\u4E00-\u9FFF\u3400-\u4DBF\U00020000-\U0002A6DF\U0002A700-\U0002B73F\U0002B740-\U0002B81F\U0002B820-\U0002CEAF\U0002CEB0-\U0002EBEF\U00030000-\U0003134F\U00031350-\U000323AF\U0002EBF0-\U0002EE5F\U0002F800-\U0002FA1F\uF900-\uFAFF\u2F00-\u2FDF\u2E80-\u2EFF\u31C0-\u31EF\u2FF0-\u2FFF\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u201c\u201d\u2018\u2019\uff08\uff09\u300a\u300b\u3008\u3009\u3010\u3011\u300e\u300f\u300c\u300d\uff43\uff44\u3014\u3015\u2026\u2014\uff5e\uff4f\uffe5
-
-作者：Z小明
-链接：https://juejin.cn/post/7468152445945806883
-来源：稀土掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。]"
+#let _default-cjk-regex = "[\p{Han}\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u201c\u201d\u2018\u2019\uff08\uff09\u300a\u300b\u3008\u3009\u3010\u3011\u300e\u300f\u300c\u300d\uff43\uff44\u3014\u3015\u2026\u2014\uff5e\uff4f\uffe5]"
 
 #let _default-font-latin = (
   serif: "Libertinus Serif",
@@ -79,18 +74,23 @@
   let _font-latin-cover(element) = {// Extract CJK font name
     let font-identifier = font-cjk-map.at(element)
     let (shape, ..variants) = font-identifier.cjk.split(":")
-    let variant = if variants.len() > 0 { variants.first() } else { none }
+    // let variant = if variants.len() > 0 { variants.first() } else { none }
     let font-family = font-cjk.at(shape)
+    let font-weight = "regular"
     let font-style = "normal"
-    let font-cjk-name = if variant == none or variant == "regular" or variant in font-family.variants {
+    for variant in variants {
+      if variant in _default-weight-map.keys() {
+        font-weight = variant
+      } else if variant in (.._default-font-styles, .._default-font-functions.keys()) {
+        font-style = variant
+      }
+    }
+    let font-cjk-name = if font-weight == none or font-weight == "regular" or font-weight in font-family.variants {
       font-family.name
     } else if variant in _default-font-styles {
       font-family.name
     } else {
       font-cjk.values().first().name
-    }
-    if variant in _default-font-styles or variant in _default-font-functions.keys() {
-      font-style = variant
     }
 
     let latin = font-latin.at(font-identifier.latin, default: "Libertinus Serif")
@@ -116,7 +116,7 @@
         name: latin,
         covers: "latin-in-cjk"
       ), font-cjk-name),
-      weight: if variant == none { 400 } else { _default-weight-map.at(variant, default: 400) },
+      weight: if font-weight == none { 400 } else { _default-weight-map.at(font-weight, default: 400) },
       style: font-style
     )
     
