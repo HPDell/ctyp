@@ -50,7 +50,9 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 字体集合至少包含一个元素，但无需包含所有元素。
 目前 CTyp 包提供 Fandol 字体集合。
 
-字体集合应当是如下结构的字典，
+=== 格式说明
+
+字体集合应当是如下结构的字典。
 
 ```typ
 #let fandol-fontset = (
@@ -67,7 +69,8 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 )
 ```
 
-#note-box(title: [格式说明])[
+具体字段含义如下：
+
 - `family`： 一个字典，列出了所用的各种字形，如 `song`, `hei`, `kai`, `fang` 等。
   - `[key]`：字形的名称，是一个字典。
     - `name`：所用的字体的名称。
@@ -79,8 +82,33 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
       - `serif`：使用衬线字体。
       - `sans`：使用无衬线字体。
       - `mono`：使用等宽字体。
-]
 
+=== 预定义的集合
+
+CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使用。
+
+#align(center)[
+  #table(
+    columns: 4,
+    align: center + horizon,
+    table.header[*集合名称*][*字形*][*字体标识*][*中文名称*],
+    ..yaml("fontsets.yaml").map(fs => {
+      let family = fs.at("family", default: none)
+      if family == none {
+        (
+          table.cell(rowspan: n-shapes, fs.name),
+          ([], ) * 3
+        ).flatten()
+      } else {
+        let n-shapes = fs.family.len()
+        (
+          table.cell(rowspan: n-shapes, fs.name),
+          fs.family.map(it => (it.shape, raw(it.id), it.at("name", default: "")))
+        ).flatten()
+      }
+    }).flatten()
+  )
+]
 
 == 修改字体映射
 
