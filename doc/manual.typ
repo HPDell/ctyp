@@ -113,30 +113,8 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 
 === 预定义的集合
 
-CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使用。
-
-#align(center)[
-  #table(
-    columns: 4,
-    align: center + horizon,
-    table.header[*集合名称*][*字形*][*字体标识*][*中文名称*],
-    ..yaml("fontsets.yaml").map(fs => {
-      let family = fs.at("family", default: none)
-      if family == none {
-        (
-          table.cell(rowspan: n-shapes, fs.name),
-          ([], ) * 3
-        ).flatten()
-      } else {
-        let n-shapes = fs.family.len()
-        (
-          table.cell(rowspan: n-shapes, fs.name),
-          fs.family.map(it => (it.shape, raw(it.id), it.at("name", default: "")))
-        ).flatten()
-      }
-    }).flatten()
-  )
-]
+CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source`, `noto`, `windows`, `huawen`。
+安装对应字体后即可使用。字体集合的详细情况参考@app:fontsets。
 
 == 修改字体映射
 
@@ -318,4 +296,40 @@ CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使
   由于 Typst 的限制，页面设置不能放在 `ctyp()` 函数中。
   目前采用的是提供单独的 `page-grid()` 函数来设置页面。
   这也有一些额外的好处，例如可以与其他包结合使用。
+]
+
+#counter(heading).update(0)
+#set heading(numbering: (..nums) => {
+  let nums = nums.pos()
+  if nums.len() == 1 {
+    numbering("附录A", ..nums)
+  } else {
+    numbering("A.1.", ..nums)
+  }
+})
+#show heading.where(level: 1): set heading(supplement: none)
+
+= 预定义的字体集合 <app:fontsets>
+
+#align(center)[
+  #table(
+    columns: 4,
+    align: center + horizon,
+    table.header[*集合名称*][*字形*][*字体标识*][*中文名称*],
+    ..yaml("fontsets.yaml").map(fs => {
+      let family = fs.at("family", default: none)
+      if family == none {
+        (
+          table.cell(rowspan: n-shapes, fs.name),
+          ([], ) * 3
+        ).flatten()
+      } else {
+        let n-shapes = fs.family.len()
+        (
+          table.cell(rowspan: n-shapes, fs.name),
+          fs.family.map(it => (it.shape, raw(it.id), it.at("name", default: "")))
+        ).flatten()
+      }
+    }).flatten()
+  )
 ]
