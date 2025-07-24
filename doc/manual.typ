@@ -156,8 +156,8 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
   *加粗的宋体内容，西文使用 Sans 字体*
 ]
 
-从上面的例子可以看到，*默认情况下 `strong` 元素使用黑体，而不加粗*。
-也就是和 `#hei(weight: "regular")[]` 的#hei(weight: "regular")[效果]相同。
+从上面的例子可以看到，*默认情况下 `strong` 元素使用常规黑体*，而非#hei(weight: "bold")[加粗的黑体]，
+也就是和 ```typ #hei(weight: "regular")[]``` 的#hei(weight: "regular")[效果]相同。
 如果使用#hei(weight: "bold")[加粗的黑体]，则可能过粗。
 这通常也是 LaTeX 中的默认行为。
 如果偏好 Microsoft Word 的行为，即使用黑体的情况下加粗，那么可以在 `font-cjk-map` 中将对应元素的 `cjk` 字段增加一个 `:bold` 后缀。
