@@ -4,13 +4,41 @@
 #codly(languages: codly-languages)
 #import "@preview/theorion:0.3.3": cosmos
 #import cosmos.default: *
+#import "@preview/marge:0.1.0": sidenote
 
-#show: page-grid
+#show: page-grid.with(width: 48, note-right: 8)
+
 #let (ctypset, (song, hei, kai, fang)) = ctyp(
   fix-list-args: (inset: (left: 1em)),
 )
 #show: ctypset
 #show: codly-init
+
+#let sidenote = sidenote.with(
+  side: right,
+  padding: (left: 1em, right: 2em),
+  format: it => block(width: 8em + 8pt, inset: (x: 4pt, y: 4pt), stroke: gray + 1pt, radius: 2pt, it.body)
+)
+
+#let note-ctyp-arg(..bodies) = sidenote[
+  #let (name, ..desc) = bodies.pos()
+  #stack(
+    dir: ttb,
+    spacing: 8pt,
+    emoji.a + h(4pt) + name,
+    ..desc
+  )
+]
+
+#let note-ctyp-func(..bodies) = sidenote[
+  #let (name, ..desc) = bodies.pos()
+  #stack(
+    dir: ttb,
+    spacing: 8pt,
+    emoji.mousetrap + h(4pt) + name,
+    ..desc
+  )
+]
 
 #block(width: 100%, below: 2em)[
   #set align(center)
@@ -45,10 +73,10 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 
 == 字体集合
 
+#note-ctyp-arg[fontset][字体集合。接受一个字符串选取预定义的字体集合，或一个字典自定义字体集合。][默认值：`fandol`]
 字体集合是一系列字体名称的集合，包括其变体。
 字体集合通常包含以下元素：宋体、黑体、楷体、仿宋。
 字体集合至少包含一个元素，但无需包含所有元素。
-目前 CTyp 包提供 Fandol 字体集合。
 
 === 格式说明
 
@@ -112,11 +140,15 @@ CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使
 
 == 修改字体映射
 
+#note-ctyp-arg[font-cjk-map][字体映射表。修改字符集合定义的映射表。][默认值：`(:)`]
 在字体集合提供默认字体映射的基础上，可以为特定元素修改其所使用的字体。
-设置方法是通过 `ctyp()` 函数中的参数 `font-cjk-map()` 来修改，格式参考字体集合字典中的 `map` 字段。
+设置方法是通过 `ctyp()` 函数中的参数 `font-cjk-map` 来修改，格式参考字体集合字典中的 `map` 字段。
 需要保证修改后的字体映射仍然能够找到对应的字体。
 
-除了能够设置元素的中文字体，还可以设置对应的西文字体，使得中西文字体能够匹配。
+#note-ctyp-arg[font-latin][西文字体映射。定义每种西文字形所对应的字体。][默认值：`(:)`]
+除了能够设置元素的中文字体，还可以通过 `font-latin` 参数设置西文字体映射。
+西文字体的字形为 `fontset.map.[element].latin` 中所用到的值，一般情况下是 `serif`, `sans`, `mono` 三种。
+该参数需要为这些字形指定具体的字体。
 
 #tip-box(title: [修改字体映射])[
   将 `strong` 元素从使用#strong[黑体]改为使用宋体
@@ -193,6 +225,7 @@ CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使
 
 == 智能引号（Smartquote）
 
+#note-ctyp-arg[fix-smartquote][设置是否开启智能引号修复。][默认值：`true`]
 当中文与英文混杂时，如果通过 ```typ set text(lang: "zh")``` 设置了，Typst 在英文中也会使用中文的智能引号。
 为了修复这一问题，该包参考了#link("https://typst-doc-cn.github.io/guide/FAQ/smartquote-font.html")[“Typst 中文社区”]中提供的解决方案，将智能引号的字体设置为 Latin 字体。
 考虑到中文书写时，往往不会使用智能引号，而是依赖输入法进行输入；而使用英文时，却往往需要智能引号，尤其是在纯文本编辑器中。
@@ -208,6 +241,9 @@ CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使
 
 = 列表
 
+== 列表布局优化
+
+#note-ctyp-arg[fix-list-enum][设置是否修复列表样式。][默认值：`true`]
 不论是编号列表还是符号列表，在使用中文时，很容易产生列表项目符号与内容基线不平的问题。
 该包重新设置了列表的样式，使得列表项目符号与内容基线对齐。
 该功能默认开启。
@@ -237,8 +273,33 @@ CTyp 包提供了以下预定义的字体集合，安装对应字体后即可使
 ```
 ]
 
+== 列表布局设置
+
+#note-ctyp-arg[fix-list-args][列表样式设置。设置列表的样式。][默认值：`(:)`]
+如果要修改默认的列表布局，可以通过 `ctyp()` 函数的参数 `fix-list-args` 和 `fix-enum-args` 来设置。
+这两个参数都是一个字典，包含了列表的样式设置，已尽可能兼容 Typst 提供的 `list` 和 `enum` 两个函数的参数。
+具体参数说明如下：
+
+#align(center)[#table(
+  columns: 3,
+  align: (x, y) => if y == 0 or x == 0 { center + horizon} else { left + horizon },
+  table.header[*参数*][*含义*][*默认值*],
+  [`marker`], [符号列表的备选符号，循环使用，遇到编号列后重置。], [#(sym.circle.filled, sym.triangle.r.filled, sym.dash).join(", ")],
+  [`numberer`], [编号列表的编号格式，循环使用，遇到符号列表后重置。], [#("1)", "a)", "i)").join(", ")],
+  [`tight`], [是否使用紧凑布局。], [#(true)],
+  [`indent`], [列表整体缩进。表现为左侧的边距。], [#(0em)],
+  [`body-indent`], [列表内容缩进。], [#(0.5em)],
+  [`spacing`], [列表项目之间的间隔。如果使用紧凑布局，其值采用 `par.leading`；否则采用 `par.spacing`。], [#(auto)],
+  [`label-sep`], [列表符号/编号与内容之间的间隔。], [#(0em)],
+  [`marker-width`], [符号的宽度。], [#(0.5em)],
+  [`number-width`], [编号的宽度。], [#(1.5em)],
+  [`debug`], [调试模式。], [#(false)],
+  [`..block-args`], [捕获所有其他传递到 `block` 函数的参数。], []
+)]
+
 = 页面设置
 
+#note-ctyp-func[page-grid][设置页芯大小，优先保证宽度为整字符数，避免过多分散对齐问题。]
 通常中文环境下，对页面的设置是基于字符数的。
 该包提供了一个 `page-grid()` 函数，可以根据字符数设置页面的边距。
 该函数接收 `page()` 函数的 `margin` 参数的所有合法值，但是对于 `width` 和 `height` 参数，必须是整数，表示字符的数量。
