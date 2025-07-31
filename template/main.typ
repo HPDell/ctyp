@@ -1,8 +1,8 @@
-#import "@local/ctyp:0.1.0": *
+#import "@preview/ctyp:0.1.0": *
 
 #set document(title: "标题", author: "作者")
 
-#let (theme, ..fonts) = ctyp()
+#let (ctypset, cjk) = ctyp()
 
 #let maketitle() = context {
   block(width: 100%, {
@@ -12,13 +12,13 @@
     document.title
   })
   block(width: 100%, {
-    show: fonts.kai
+    show: cjk.kai
     set text(size: 1.2em)
     set align(center + horizon)
     document.author.join()
   })
 }
 
-#show: theme
+#show: ctypset
 
 #maketitle()
