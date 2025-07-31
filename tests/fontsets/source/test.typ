@@ -1,3 +1,4 @@
+/// [skip]
 #import "/lib.typ": *
 #let testcase(
   page-args: (:), 
