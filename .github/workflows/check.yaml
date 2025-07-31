@@ -19,6 +19,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Typst
         uses: typst-community/setup-typst@v3
+      - name: Install tytanic
+        uses: taiki-e/cache-cargo-install-action@v2
+        with:
+          tool: tytanic@0.2.2
       - name: Install Fandol fonts
         run: |
           FONT_DIR=~/.local/share/fonts/opentype/fandol
@@ -33,12 +37,4 @@ jobs:
             exit 1
           fi
       - name: Run CTyp tests
-        run: |
-          bash compile.sh --skip
-          status_output=$(git status --porcelain)
-          if [ -n "$status_output" ]; then
-            echo "Test failed. The following files are not consistent with the expected output:"
-            echo "$status_output"
-            exit 1
-          fi
-        working-directory: tests
+        run: tt run --no-fail-fast --use-system-fonts
