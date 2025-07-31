@@ -19,9 +19,4 @@ categories = [
 ]
 compiler = "0.13.1"
 
-[template]
-path = "template"
-entrypoint = "main.typ"
-thumbnail = "thumbnail.png"
-
 [tool]
