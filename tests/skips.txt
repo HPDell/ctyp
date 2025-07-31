@@ -1,5 +1,0 @@
-fontset-fangzheng.typ
-fontset-source.typ
-fontset-noto.typ
-fontset-windows.typ
-fontset-huawen.typ
