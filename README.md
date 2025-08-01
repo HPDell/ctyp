@@ -12,7 +12,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 通过以下代码快速使用 CTyp 包的设置：
 
 ```typ
-#import "@local/ctyp:0.1.0": ctyp
+#import "@preview/ctyp:0.1.0": ctyp
 #let (ctypset, cjk) = ctyp()
 #show: ctypset
 ```
