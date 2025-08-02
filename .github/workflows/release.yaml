@@ -47,6 +47,8 @@ jobs:
             --exclude=tests \
             ../ \
             packages/preview/${{ env.PACKAGE_NAME }}/$PKG_VERSION/
-          git add -A
-          git commit -m "${{ env.PACKAGE_NAME }}:$PKG_VERSION"
-          git push origin $PKG_BRANCH
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "${{ env.PACKAGE_NAME }}:$PKG_VERSION"
+            git push origin $PKG_BRANCH
+          fi
