@@ -1,0 +1,54 @@
+name: "Release to Typst universe"
+
+on:
+  push:
+    branches:
+      - release/*
+
+env:
+  GIT_USER_EMAIL: huyg0180110559@outlook.com
+  GIT_USER_NAME: HPDell
+  PACKAGE_NAME: ctyp
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Clone packages repo
+        run: |
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
+          git clone https://${{ env.GIT_USER_NAME }}:${{ secrets.GH_TOKEN }}@github.com/HPDell/typst-packages.git packages
+      - name: Get version number
+        run: |
+          pip install toml-cli
+          echo "PKG_VERSION=`toml get --toml-path typst.toml package.version`" >> "$GITHUB_ENV"
+      - name: Commit, merge and push
+        working-directory: packages
+        run: |
+          PKG_BRANCH="feat/${{ env.PACKAGE_NAME }}-$PKG_VERSION"
+          if [ -z `git branch -r | grep $PKG_BRANCH` ]; then
+            git switch -c $PKG_BRANCH
+            mkdir -p packages/preview/${{ env.PACKAGE_NAME }}/$PKG_VERSION
+          else
+            git switch $PKG_BRANCH
+            git pull --rebase
+          fi
+          mkdir -p packages/preview/${{ env.PACKAGE_NAME }}/$PKG_VERSION
+          rsync -av \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=.gitignore \
+            --exclude=.vscode \
+            --exclude=packages \
+            --exclude=doc \
+            --exclude=tests \
+            ../ \
+            packages/preview/${{ env.PACKAGE_NAME }}/$PKG_VERSION/
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "${{ env.PACKAGE_NAME }}:$PKG_VERSION"
+            git push origin $PKG_BRANCH
+          fi
