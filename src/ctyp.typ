@@ -37,6 +37,7 @@
   fix-list-args: (:),
   fix-enum-args: (:),
   fix-smartquote: true,
+  fix-first-line-indent: true,
   reset-strong-delta: 0,
   remove-cjk-break-space: true
 ) = {
@@ -146,19 +147,9 @@
     show heading: _apply-font-to-cjk.with(..font-select.heading)
     /// [Font Settings] End
     
-    /// [Paragraph Settings] Begin
-    /// This region apply paragraph settings to specific elements.
-    set par(first-line-indent: (amount: 2em, all: true), justify: true)
-    
+    set par(justify: true)
     show heading: set block(above: 1em, below: 1em)
     set heading(numbering: "1.1.")
-    show quote.where(block: false): set par(
-      first-line-indent: (amount: 1em, all: true)
-    )
-    show quote.where(block: false).and(quote.where(quotes: false)): set par(
-      first-line-indent: (amount: 2em, all: true)
-    )
-    /// [Paragraph Settings] End
     
     /// [Other Settings] Begin
     show quote.where(block: true): body => {
@@ -205,6 +196,22 @@
       body
     }
   }
+  /// [Paragraph Settings] Begin
+  /// This region apply paragraph settings to specific elements.
+  if fix-first-line-indent {
+    theme = (body) => {
+      show: theme
+      set par(first-line-indent: first-line-indent)
+      show quote.where(block: false): set par(
+        first-line-indent: (amount: 1em, all: true)
+      )
+      show quote.where(block: false).and(quote.where(quotes: false)): set par(
+        first-line-indent: (amount: 2em, all: true)
+      )
+      body
+    }
+  }
+  /// [Paragraph Settings] End
   let font-utils = fontset-cjk.family.pairs().map(((k, v)) => { (
     k, 
     (body, weight: "regular", latin: "serif") => {
