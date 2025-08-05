@@ -1,4 +1,3 @@
-#import "@preview/cjk-unbreak:0.1.1": remove-cjk-break-space
 #import "./fonts/index.typ": *
 #import "./utils/enumitem.typ": enumitem
 #import "./utils/page-grid.typ": page-grid
@@ -38,7 +37,8 @@
   fix-list-args: (:),
   fix-enum-args: (:),
   fix-smartquote: true,
-  reset-strong-delta: 0
+  reset-strong-delta: 0,
+  remove-cjk-break-space: true
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
@@ -195,10 +195,15 @@
       body
     }
   }
-  theme = (body) => {
-    show: theme
-    show: remove-cjk-break-space
-    body
+  if remove-cjk-break-space {
+    theme = (body) => {
+      show: theme
+      show regex(_default-cjk-regex + " " + _default-cjk-regex): it => {
+        let (a, _, b) = it.text.clusters()
+        a + b
+      }
+      body
+    }
   }
   let font-utils = fontset-cjk.family.pairs().map(((k, v)) => { (
     k, 
