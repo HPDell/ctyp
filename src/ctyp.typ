@@ -39,7 +39,8 @@
   fix-smartquote: true,
   fix-first-line-indent: true,
   reset-strong-delta: 0,
-  remove-cjk-break-space: true
+  remove-cjk-break-space: true,
+  heading-numbering: "1.1.",
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
@@ -149,7 +150,7 @@
     
     set par(justify: true)
     show heading: set block(above: 1em, below: 1em)
-    set heading(numbering: "1.1.")
+    set heading(numbering: heading-numbering)
     
     /// [Other Settings] Begin
     show quote.where(block: true): body => {
