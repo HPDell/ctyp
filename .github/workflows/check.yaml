@@ -65,7 +65,7 @@ jobs:
         shell: pwsh
       - name: Run CTyp tests
         run: |
-          tt run --font-path "$FONT_DIR" --no-fail-fast --use-system-fonts
+          tt run --no-fail-fast --use-system-fonts
           tt run --no-fail-fast --use-system-fonts fontsets/windows
         shell: pwsh
 
