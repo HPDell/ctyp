@@ -52,12 +52,11 @@ jobs:
           tool: tytanic@0.2.2
       - name: Install Fandol fonts
         run: |
-          $FONT_DIR = "_fonts"
-          New-Item -ItemType Directory -Force -Path $FONT_DIR
+          $FONT_DIR = "C:\\Windows\\Fonts"
           Invoke-WebRequest -Uri "https://mirrors.ctan.org/fonts/fandol.zip" -OutFile "fandol.zip"
           Expand-Archive -Path "fandol.zip" -DestinationPath $FONT_DIR -Force
           Remove-Item "fandol.zip"
-          if (typst fonts --font-path "_fonts" | Select-String -Pattern "Fandol") {
+          if (typst fonts | Select-String -Pattern "Fandol") {
             Write-Host "Fandol fonts installed successfully."
           } else {
             Write-Host "Fandol fonts installation failed."
