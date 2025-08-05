@@ -6,21 +6,24 @@
 #import cosmos.clouds: *
 #show: show-theorion
 
-#let (ctypset, cjk) = ctyp()
+#let (ctypset, cjk) = ctyp(first-line-indent: 0em)
 #show: ctypset
 
 #show: university-theme.with(
-  aspect-ratio: "16-9",
   config-info(
     title: "测试 Touying 幻灯片",
     date: datetime.today(),
     institution: [单位],
     logo: emoji.school,
   ),
-  config-common()
+  config-page(
+    margin: (top: 2.25em, bottom: 1em, x: 2em),
+  )
 )
 
-#title-slide()
+#title-slide()[
+  #text(size: 2em)[*测试 Touying 幻灯片*]
+]
 
 == 目录 <touying:hidden>
 
@@ -38,15 +41,15 @@
 
 #meanwhile
 
-同时, #pause 可是使用 `#meanwhile` 来 #pause 同时展示一些其他信息。
+同时，#pause 可以使用 `#meanwhile` 来 #pause 同时展示一些其他信息。
 
 == 复杂动画
 
 在第 #touying-fn-wrapper((self: none) => str(self.subslide)) 张幻灯片中我们可以
 
-使用 #uncover("2-")[`#uncover` function] 预留位置
+使用 #uncover("2-")[`#uncover` 函数] 预留位置
 
-使用 #only("2-")[`#only` function] 不预留位置
+使用 #only("2-")[`#only` 函数] 不预留位置
 
 #alternatives[调用 `#only` 多次 \u{2717}][调用 `#alternatives` 函数 #sym.checkmark] 来选择其中一个。
 
