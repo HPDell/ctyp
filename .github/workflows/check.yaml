@@ -12,7 +12,7 @@ on:
       - master
 
 jobs:
-  test:
+  test-ubuntu:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -30,6 +30,60 @@ jobs:
           wget "https://mirrors.ctan.org/fonts/fandol.zip"
           unzip fandol.zip -d $FONT_DIR && rm fandol.zip
           fc-cache -fv
+          if typst fonts | grep -q Fandol; then
+            echo "Fandol fonts installed successfully."
+          else
+            echo "Fandol fonts installation failed."
+            exit 1
+          fi
+      - name: Run CTyp tests
+        run: tt run --no-fail-fast --use-system-fonts
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v3
+      - name: Install tytanic
+        uses: taiki-e/cache-cargo-install-action@v2
+        with:
+          tool: tytanic@0.2.2
+      - name: Install Fandol fonts
+        run: |
+          $FONT_DIR = "C:\\Windows\\Fonts"
+          Invoke-WebRequest -Uri "https://mirrors.ctan.org/fonts/fandol.zip" -OutFile "fandol.zip"
+          Expand-Archive -Path "fandol.zip" -DestinationPath $FONT_DIR -Force
+          Remove-Item "fandol.zip"
+          if (typst fonts | Select-String -Pattern "Fandol") {
+            Write-Host "Fandol fonts installed successfully."
+          } else {
+            Write-Host "Fandol fonts installation failed."
+            exit 1
+          }
+        shell: pwsh
+      - name: Run CTyp tests
+        run: tt run --no-fail-fast --use-system-fonts
+        shell: pwsh
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v3
+      - name: Install tytanic
+        uses: taiki-e/cache-cargo-install-action@v2
+        with:
+          tool: tytanic@0.2.2
+      - name: Install Fandol fonts
+        run: |
+          FONT_DIR=~/Library/Fonts/Fandol
+          mkdir -p $FONT_DIR
+          curl -L "https://mirrors.ctan.org/fonts/fandol.zip" -o fandol.zip
+          unzip fandol.zip -d $FONT_DIR && rm fandol.zip
           if typst fonts | grep -q Fandol; then
             echo "Fandol fonts installed successfully."
           else
