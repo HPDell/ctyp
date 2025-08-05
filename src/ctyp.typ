@@ -91,7 +91,7 @@
   /// 如果为 true，将移除 CJK 字符之间的断行空格。
   /// 这用于防止 CJK 字符被空格断开。
   /// -> bool
-  remove-cjk-break-space: true
+  remove-cjk-break-space: true,
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
@@ -201,7 +201,7 @@
     
     set par(justify: true)
     show heading: set block(above: 1em, below: 1em)
-    set heading(numbering: "1.1.")
+    set heading(numbering: heading-numbering)
     
     /// [Other Settings] Begin
     show quote.where(block: true): body => {

@@ -6,7 +6,7 @@
 #import cosmos.clouds: *
 #show: show-theorion
 
-#let (ctypset, cjk) = ctyp(fix-first-line-indent: false)
+#let (ctypset, cjk) = ctyp(fix-first-line-indent: false, heading-numbering: "1.1")
 #show: ctypset
 
 #show: university-theme.with(
