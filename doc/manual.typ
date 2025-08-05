@@ -69,6 +69,16 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
   变量名 `ctypset` 和 `cjk` 可以自行设置，无需使用文档中的名字。
 ]
 
+在 Typst Web App 环境中，可以直接使用 Noto CJK 字体系列，通过以下代码进行设置：
+
+```typ
+#import "@preview/ctyp:0.1.0": *
+#let (ctypset, cjk) = ctyp(
+  fontset-cjk: "noto"
+)
+#show: ctypset
+```
+
 = 字体设置
 
 == 字体集合
