@@ -23,9 +23,7 @@
 
 #show: page-grid.with(width: 48, note-right: 8)
 
-#let (ctypset, (song, hei, kai, fang)) = ctyp(
-  fix-list-args: (inset: (left: 1em)),
-)
+#let (ctypset, (song, hei, kai, fang)) = ctyp()
 #show: ctypset
 #show: codly-init
 

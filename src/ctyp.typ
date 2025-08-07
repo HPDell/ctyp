@@ -253,7 +253,7 @@
   if fix-first-line-indent {
     theme = (body) => {
       show: theme
-      set par(first-line-indent: first-line-indent)
+      set par(first-line-indent: (amount: 2em, all: true))
       show quote.where(block: false): set par(
         first-line-indent: (amount: 1em, all: true)
       )
