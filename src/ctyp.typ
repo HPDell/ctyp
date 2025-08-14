@@ -29,15 +29,67 @@
   "strike": strike,
 )
 
+/// This function sets up a basic typesetting environment for CJK documents.
+/// It applies CJK fonts, sets up paragraph styles, and provides utility functions for CJK text styling.
+/// -> array
 #let ctyp(
+  /// Specify fontset.
+  /// If `auto`, it will use the default Fandol fontset.
+  /// If a string, it must be one of the packed fontsets defined in packed fontsets.
+  /// If a dictionary, it uses the following structure:
+  /// - `family`: a dictionary mapping font shapes to font families. Including the following fields:
+  ///   - `[shape]`: a string representing the font shape (e.g., "song", "hei").
+  ///     Can be repeated for multiple shapes.
+  ///     For CJK fonts, shapes can be various, including but not limited to "song", "hei", "kai", "fang".
+  ///     Each shape must have the following fields:
+  ///     - `name`: the name of the font family. It should be a valid font name that can be used in Typst.
+  ///     - `variants`: an array of font variants (e.g., ["bold", "italic"]).
+  /// - `map`: a dictionary mapping elements to font identifiers.
+  ///   - `[element]`: a string representing the element (e.g., "text", "strong"). Can be repeated for multiple elements.
+  ///     For now, only the following elements are supported: `text`, `emph`, `strong`, `raw`, `heading`.
+  ///     Each element must have the following fields:
+  ///     - `cjk`: the CJK font identifier, which is a string in the format "shape:variant".
+  ///     - `latin`: the Latin font identifier, which is a string or one of the predefined values ("serif", "sans", "mono").
+  /// -> auto | str | dictionary
   fontset-cjk: auto,
-  font-cjk-map: (:),
+  /// Specify latin fonts. Must be a dictionary mapping latin font shapes to font names.
+  /// It follows the structure:
+  /// - `serif`: the serif font name.
+  /// - `sans`: the sans-serif font name.
+  /// - `mono`: the monospace font name.
+  /// -> dictionary
   font-latin: (:),
+  /// Modify the CJK font mapping for specific elements.
+  /// It follows the structure:
+  /// - `[element]`: a string representing the element (e.g., "text", "strong"). Can be repeated for multiple elements.
+  ///     For now, only the following elements are supported: `text`, `emph`, `strong`, `raw`, `heading`.
+  ///     Each element must have the following fields:
+  ///   - `cjk`: the CJK font identifier, which is a string in the format "shape:variant".
+  ///   - `latin`: the Latin font identifier, which is a string or one of the predefined values ("serif", "sans", "mono").
+  /// -> dictionary
+  font-cjk-map: (:),
+  /// Whether to fix the styles for lists and enumerations.
+  /// If true, it will apply the styles defined in `fix-list-args` and `fix-enum-args`.
+  /// -> bool
   fix-list-enum: true,
+  /// Additional arguments for list styles.
+  /// -> dictionary
   fix-list-args: (:),
+  /// Additional arguments for enumeration styles.
+  /// -> dictionary
   fix-enum-args: (:),
+  /// Whether to fix smart quotes.
+  /// If true, it will automatically convert quotes to smart quotes.
+  /// -> bool
   fix-smartquote: true,
+  /// Reset the strong delta to 0.
+  /// This is used to reset the strong delta for the strong element.
+  /// -> int
   reset-strong-delta: 0,
+  /// Whether to remove CJK break spaces.
+  /// If true, it will remove break spaces between CJK characters.
+  /// This is used to prevent CJK characters from being broken by spaces.
+  /// -> bool
   remove-cjk-break-space: true
 ) = {
   // Merge font-cjk-map with default options.
