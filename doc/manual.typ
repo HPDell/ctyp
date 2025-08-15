@@ -1,3 +1,4 @@
+#import "@preview/tidy:0.4.3"
 #import "@local/ctyp:0.1.1": ctyp, fandol-fontset, page-grid
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.8": *
@@ -5,6 +6,20 @@
 #import "@preview/theorion:0.3.3": cosmos
 #import cosmos.default: *
 #import "@preview/marge:0.1.0": sidenote
+
+#let appendix(body) = {
+  counter(heading).update(0)
+  set heading(numbering: (..nums) => {
+    let nums = nums.pos()
+    if nums.len() == 1 {
+      numbering("附录A", ..nums)
+    } else {
+      numbering("A.1.", ..nums)
+    }
+  })
+  show heading.where(level: 1): set heading(supplement: none)
+  body
+}
 
 #show: page-grid.with(width: 48, note-right: 8)
 
@@ -308,16 +323,20 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
   这也有一些额外的好处，例如可以与其他包结合使用。
 ]
 
-#counter(heading).update(0)
-#set heading(numbering: (..nums) => {
-  let nums = nums.pos()
-  if nums.len() == 1 {
-    numbering("附录A", ..nums)
-  } else {
-    numbering("A.1.", ..nums)
-  }
-})
-#show heading.where(level: 1): set heading(supplement: none)
+#show: appendix
+
+= 参考
+
+#{
+  set heading(numbering: none)
+  set par(first-line-indent: 0em)
+  let refs = tidy.parse-module((
+    "../src/ctyp.typ",
+    "../src/utils/enumitem.typ",
+    "../src/utils/page-grid.typ",
+  ).map(read).join("\n\n"), name: "CTyp")
+  tidy.show-module(refs, style: tidy.styles.default)
+}
 
 = 预定义的字体集合 <app:fontsets>
 

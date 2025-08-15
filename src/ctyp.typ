@@ -29,15 +29,67 @@
   "strike": strike,
 )
 
+/// 该函数设置了一个基本的 CJK 文档排版环境。
+/// 它应用了 CJK 字体，设置了段落样式，并提供了 CJK 文本样式的实用函数。
+/// -> array
 #let ctyp(
+  /// 设置 CJK 字体集合。
+  /// 如果是 `auto`，使用默认的 Fandol 字体集合。
+  /// 如果是 `str`，使用预定义的打包字体集合中的一个。
+  /// 如果是 `dictionary`，则包含字体集合的详细信息，其结构如下：
+  /// / `family`: 一个从字形到字体名称的映射。包含以下字段：
+  ///   / `[shape]`: 代表字形的字符串（如 "song", "hei"）。
+  ///     可以多次重复，以定义多种字形。
+  ///     对于 CJK 字体而言，字形可以有很多，可包括但不限于 "song", "hei", "kai", "fang"。
+  ///     对于每个字形，其值都是一个字典，包含以下字段：
+  ///     / `name`: 字体名称。必须是一个可用的、能被 Typst 识别的字体名称。
+  ///     / `variants`: 一个定义有哪些变体的数组（如 `["bold", "italic"]`）。
+  /// / `map`: 一个元素到字形的映射的字典。包含以下字段
+  ///   / `[element]`: 代表元素的字符串（例如 `"text"`, `"strong"`）。可以多次重复以定义多个元素。
+  ///     目前仅支持以下元素 `text`, `emph`, `strong`, `raw`, `heading`。
+  ///     每个元素的值都是一个字典，包含以下字段：
+  ///     / `cjk`: CJK 字体标识，格式为 "shape:variant"。其中 `shape` 是 `family` 中的键，`variant` 是 `variants` 中的值。
+  ///     / `latin`: Latin 字体标识，是预定义的字符串之一："serif", "sans", "mono"。
+  /// -> auto | str | dictionary
   fontset-cjk: auto,
-  font-cjk-map: (:),
+  /// 指定西文字体。必须是一个字典，将西文字体形状映射到字体名称。
+  /// 具有以下字段：
+  /// / `serif`: 衬线字体名称。默认为 "Libertinus Serif"。
+  /// / `mono`: 等款字体名称。无默认。
+  /// / `sans`: 无衬线字体名称。默认为 "DejaVu Sans Mono"。
+  /// -> dictionary
   font-latin: (:),
+  /// 修改 CJK 字体映射表。
+  /// 具有以下字段：
+  /// / `[element]`: 代表元素的字符串（例如 `"text"`, `"strong"`）。可以多次重复以定义多个元素。
+  ///   目前仅支持以下元素 `text`, `emph`, `strong`, `raw`, `heading`。
+  ///   每个元素的值都是一个字典，包含以下字段：
+  ///   / `cjk`: CJK 字体标识，格式为 "shape:variant"。其中 `shape` 是 `family` 中的键，`variant` 是 `variants` 中的值。
+  ///   / `latin`: Latin 字体标识，是预定义的字符串之一："serif", "sans", "mono"。
+  /// -> dictionary
+  font-cjk-map: (:),
+  /// 是否修正列表和枚举的样式。
+  /// 如果为 true，将应用 `fix-list-args` 和 `fix-enum-args` 中定义的样式。
+  /// -> bool
   fix-list-enum: true,
+  /// 接受一个字典，定义列表样式的参数。详细参数见 @enumitem 函数。
+  /// -> dictionary
   fix-list-args: (:),
+  /// 接受一个字典，定义枚举样式的参数。详细参数见 @enumitem 函数。
+  /// -> dictionary
   fix-enum-args: (:),
+  /// 是否修正智能引号。
+  /// 如果为 true，将自动将引号转换为智能引号。
+  /// -> bool
   fix-smartquote: true,
+  /// 重置粗体的 delta 值为 0。
+  /// 基于此实现在 `font-cjk-map` 中指定元素的字重。
+  /// -> int
   reset-strong-delta: 0,
+  /// 是否移除 CJK 字符之间的断行空格。
+  /// 如果为 true，将移除 CJK 字符之间的断行空格。
+  /// 这用于防止 CJK 字符被空格断开。
+  /// -> bool
   remove-cjk-break-space: true
 ) = {
   // Merge font-cjk-map with default options.
