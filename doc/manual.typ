@@ -23,7 +23,9 @@
 
 #show: page-grid.with(width: 48, note-right: 8)
 
-#let (ctypset, (song, hei, kai, fang)) = ctyp()
+#let (ctypset, (song, hei, kai, fang)) = ctyp(
+  heading-numbering: "1."
+)
 #show: ctypset
 #show: codly-init
 

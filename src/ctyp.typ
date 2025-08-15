@@ -82,6 +82,9 @@
   /// 如果为 true，将自动将引号转换为智能引号。
   /// -> bool
   fix-smartquote: true,
+  /// 是否修正列表的首行缩进。
+  /// 如果为 true，将应用 `fix-first-line-indent` 中定义的首行缩进。
+  /// -> bool
   fix-first-line-indent: true,
   /// 重置粗体的 delta 值为 0。
   /// 基于此实现在 `font-cjk-map` 中指定元素的字重。
@@ -92,6 +95,11 @@
   /// 这用于防止 CJK 字符被空格断开。
   /// -> bool
   remove-cjk-break-space: true,
+  /// 设置标题编号的样式。
+  /// 只接受函数 `numbering()` 函数中的合法的编号样式。
+  /// 如果为 `none`，则不显示编号。
+  /// -> str | none
+  heading-numbering: none,
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
