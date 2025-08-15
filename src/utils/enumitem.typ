@@ -14,18 +14,47 @@
   inset: (left: 0em)
 )
 
+/// 自定义列表和枚举布局，修复符号和文字不对齐的问题。
 #let enumitem(
+  /// 符号列表可选用的符号。将循环使用。
+  /// -> array
   marker: (sym.circle.filled, sym.triangle.r.filled, sym.dash),
+  /// 编号列表可选用的编号格式。将循环使用。
+  /// -> array
   numberer: ("1)", "a)", "i)"),
+  /// 是否使用紧凑布局。
+  /// 紧凑布局会使用 `par.leading` 作为列表项目之间的间隔，
+  /// 否则使用 `par.spacing`。
+  /// -> bool
   tight: true,
+  /// 列表整体缩进。表现为左侧的边距。
+  /// -> length
   indent: 0em,
+  /// 列表内容缩进。
+  /// -> length
   body-indent: 0.5em,
+  /// 列表项目之间的间隔。
+  /// -> auto | length
   spacing: auto,
+  /// 列表符号/编号与内容之间的间隔。
+  /// -> length
   label-sep: 0em,
+  /// 符号的宽度。
+  /// -> length
   marker-width: 0.5em,
+  /// 编号的宽度。
+  /// -> length
   number-width: 1.5em,
+  /// 是否开启调试模式。
+  /// 调试模式会在列表项目的边框上显示红色和绿色的边框，
+  /// 以便于调试列表布局。
+  /// -> bool
   debug: false,
+  /// 捕获所有其他传递到 `block` 函数的参数。
+  /// -> arguments
   ..block-args,
+  /// 列表的子元素。
+  /// -> array
   children
 ) = context {
   let block-args = (:..default-block-args, ..block-args.named())

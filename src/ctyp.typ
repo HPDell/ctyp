@@ -29,66 +29,66 @@
   "strike": strike,
 )
 
-/// This function sets up a basic typesetting environment for CJK documents.
-/// It applies CJK fonts, sets up paragraph styles, and provides utility functions for CJK text styling.
+/// 该函数设置了一个基本的 CJK 文档排版环境。
+/// 它应用了 CJK 字体，设置了段落样式，并提供了 CJK 文本样式的实用函数。
 /// -> array
 #let ctyp(
-  /// Specify fontset.
-  /// If `auto`, it will use the default Fandol fontset.
-  /// If a string, it must be one of the packed fontsets defined in packed fontsets.
-  /// If a dictionary, it uses the following structure:
-  /// - `family`: a dictionary mapping font shapes to font families. Including the following fields:
-  ///   - `[shape]`: a string representing the font shape (e.g., "song", "hei").
-  ///     Can be repeated for multiple shapes.
-  ///     For CJK fonts, shapes can be various, including but not limited to "song", "hei", "kai", "fang".
-  ///     Each shape must have the following fields:
-  ///     - `name`: the name of the font family. It should be a valid font name that can be used in Typst.
-  ///     - `variants`: an array of font variants (e.g., ["bold", "italic"]).
-  /// - `map`: a dictionary mapping elements to font identifiers.
-  ///   - `[element]`: a string representing the element (e.g., "text", "strong"). Can be repeated for multiple elements.
-  ///     For now, only the following elements are supported: `text`, `emph`, `strong`, `raw`, `heading`.
-  ///     Each element must have the following fields:
-  ///     - `cjk`: the CJK font identifier, which is a string in the format "shape:variant".
-  ///     - `latin`: the Latin font identifier, which is a string or one of the predefined values ("serif", "sans", "mono").
+  /// 设置 CJK 字体集合。
+  /// 如果是 `auto`，使用默认的 Fandol 字体集合。
+  /// 如果是 `str`，使用预定义的打包字体集合中的一个。
+  /// 如果是 `dictionary`，则包含字体集合的详细信息，其结构如下：
+  /// / `family`: 一个从字形到字体名称的映射。包含以下字段：
+  ///   / `[shape]`: 代表字形的字符串（如 "song", "hei"）。
+  ///     可以多次重复，以定义多种字形。
+  ///     对于 CJK 字体而言，字形可以有很多，可包括但不限于 "song", "hei", "kai", "fang"。
+  ///     对于每个字形，其值都是一个字典，包含以下字段：
+  ///     / `name`: 字体名称。必须是一个可用的、能被 Typst 识别的字体名称。
+  ///     / `variants`: 一个定义有哪些变体的数组（如 `["bold", "italic"]`）。
+  /// / `map`: 一个元素到字形的映射的字典。包含以下字段
+  ///   / `[element]`: 代表元素的字符串（例如 `"text"`, `"strong"`）。可以多次重复以定义多个元素。
+  ///     目前仅支持以下元素 `text`, `emph`, `strong`, `raw`, `heading`。
+  ///     每个元素的值都是一个字典，包含以下字段：
+  ///     / `cjk`: CJK 字体标识，格式为 "shape:variant"。其中 `shape` 是 `family` 中的键，`variant` 是 `variants` 中的值。
+  ///     / `latin`: Latin 字体标识，是预定义的字符串之一："serif", "sans", "mono"。
   /// -> auto | str | dictionary
   fontset-cjk: auto,
-  /// Specify latin fonts. Must be a dictionary mapping latin font shapes to font names.
-  /// It follows the structure:
-  /// - `serif`: the serif font name.
-  /// - `sans`: the sans-serif font name.
-  /// - `mono`: the monospace font name.
+  /// 指定西文字体。必须是一个字典，将西文字体形状映射到字体名称。
+  /// 具有以下字段：
+  /// / `serif`: 衬线字体名称。默认为 "Libertinus Serif"。
+  /// / `mono`: 等款字体名称。无默认。
+  /// / `sans`: 无衬线字体名称。默认为 "DejaVu Sans Mono"。
   /// -> dictionary
   font-latin: (:),
-  /// Modify the CJK font mapping for specific elements.
-  /// It follows the structure:
-  /// - `[element]`: a string representing the element (e.g., "text", "strong"). Can be repeated for multiple elements.
-  ///     For now, only the following elements are supported: `text`, `emph`, `strong`, `raw`, `heading`.
-  ///     Each element must have the following fields:
-  ///   - `cjk`: the CJK font identifier, which is a string in the format "shape:variant".
-  ///   - `latin`: the Latin font identifier, which is a string or one of the predefined values ("serif", "sans", "mono").
+  /// 修改 CJK 字体映射表。
+  /// 具有以下字段：
+  /// / `[element]`: 代表元素的字符串（例如 `"text"`, `"strong"`）。可以多次重复以定义多个元素。
+  ///   目前仅支持以下元素 `text`, `emph`, `strong`, `raw`, `heading`。
+  ///   每个元素的值都是一个字典，包含以下字段：
+  ///   / `cjk`: CJK 字体标识，格式为 "shape:variant"。其中 `shape` 是 `family` 中的键，`variant` 是 `variants` 中的值。
+  ///   / `latin`: Latin 字体标识，是预定义的字符串之一："serif", "sans", "mono"。
   /// -> dictionary
   font-cjk-map: (:),
-  /// Whether to fix the styles for lists and enumerations.
-  /// If true, it will apply the styles defined in `fix-list-args` and `fix-enum-args`.
+  /// 是否修正列表和枚举的样式。
+  /// 如果为 true，将应用 `fix-list-args` 和 `fix-enum-args` 中定义的样式。
   /// -> bool
   fix-list-enum: true,
-  /// Additional arguments for list styles.
+  /// 接受一个字典，定义列表样式的参数。详细参数见 @enumitem 函数。
   /// -> dictionary
   fix-list-args: (:),
-  /// Additional arguments for enumeration styles.
+  /// 接受一个字典，定义枚举样式的参数。详细参数见 @enumitem 函数。
   /// -> dictionary
   fix-enum-args: (:),
-  /// Whether to fix smart quotes.
-  /// If true, it will automatically convert quotes to smart quotes.
+  /// 是否修正智能引号。
+  /// 如果为 true，将自动将引号转换为智能引号。
   /// -> bool
   fix-smartquote: true,
-  /// Reset the strong delta to 0.
-  /// This is used to reset the strong delta for the strong element.
+  /// 重置粗体的 delta 值为 0。
+  /// 基于此实现在 `font-cjk-map` 中指定元素的字重。
   /// -> int
   reset-strong-delta: 0,
-  /// Whether to remove CJK break spaces.
-  /// If true, it will remove break spaces between CJK characters.
-  /// This is used to prevent CJK characters from being broken by spaces.
+  /// 是否移除 CJK 字符之间的断行空格。
+  /// 如果为 true，将移除 CJK 字符之间的断行空格。
+  /// 这用于防止 CJK 字符被空格断开。
   /// -> bool
   remove-cjk-break-space: true
 ) = {

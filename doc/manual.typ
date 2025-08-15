@@ -332,6 +332,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
   set par(first-line-indent: 0em)
   let refs = tidy.parse-module((
     "../src/ctyp.typ",
+    "../src/utils/enumitem.typ",
     "../src/utils/page-grid.typ",
   ).map(read).join("\n\n"), name: "CTyp")
   tidy.show-module(refs, style: tidy.styles.default)
