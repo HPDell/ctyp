@@ -320,6 +320,9 @@
       set heading(numbering: (..nums) => {
         let it-level = nums.pos().len()
         let it-number-format = heading-numbering.at(it-level - 1, default: heading-numbering.last())
+        if it-number-format == none {
+          return none
+        }
         if type(it-number-format) == str {
           it-number-format = it-number-format
         } else if type(it-number-format) == dictionary and it-number-format.keys().contains("format") {
@@ -331,7 +334,9 @@
       })
       show heading: it => block({
         let it-numbering = heading-numbering.at(it.level - 1, default: heading-numbering.last())
-        if type(it-numbering) == dictionary {
+        if it-numbering == none {
+          it.body
+        } else if type(it-numbering) == dictionary {
           let it-sep = _convert-heading-numbering-sep(it-numbering.sep)
           let it-number = (it.numbering)(..counter(heading).at(it.location())) + it-sep
           let first-line-indent = it-numbering.at("first-line-indent", default: 0em)

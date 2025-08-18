@@ -68,7 +68,7 @@
     heading-numbering: ((
       format: "一、",
       sep: 0em
-    ), "1.1", "1.1.1")
+    ), "1.1", none)
   )
   #show: theme
 
