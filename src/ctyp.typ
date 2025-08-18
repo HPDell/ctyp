@@ -1,6 +1,7 @@
 #import "./fonts/index.typ": *
 #import "./utils/enumitem.typ": enumitem
 #import "./utils/page-grid.typ": page-grid
+#import "./utils/heading-numbering.typ": _config-heading-numbering
 
 #let _default-cjk-regex = "[\p{Han}\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u201c\u201d\u2018\u2019\uff08\uff09\u300a\u300b\u3008\u3009\u3010\u3011\u300e\u300f\u300c\u300d\uff43\uff44\u3014\u3015\u2026\u2014\uff5e\uff4f\uffe5]"
 
@@ -273,80 +274,10 @@
   /// [Paragraph Settings] End
   
   /// [Heading Numbering] Begin
-  let _convert-heading-numbering-sep(sep) = {
-    if type(sep) == none {
-      box(width: 0pt)
-    } else if type(sep) == length {
-      box(width: sep)
-    } else if type(sep) == str or type(sep) == content {
-      sep
-    } else {
-      sym.wj
-    }
-  }
-  if type(heading-numbering) == str {
+  if heading-numbering != none {
     theme = (body) => {
       show: theme
-      set heading(numbering: heading-numbering)
-      body
-    }
-  } else if type(heading-numbering) == dictionary and heading-numbering.keys().contains("format") {
-    theme = (body) => {
-      show: theme
-      set heading(numbering: (..nums) => {
-        let counts = nums.pos();
-        numbering(heading-numbering.format, ..counts)
-      })
-      body
-    }
-    if heading-numbering.keys().contains("sep") and heading-numbering.sep != auto {
-      let it-sep = _convert-heading-numbering-sep(heading-numbering.sep)
-      let first-line-indent = heading-numbering.at("first-line-indent", default: 0em)
-      let hanging-indent = heading-numbering.at("hanging-indent", default: auto)
-      theme = (body) => {
-        show: theme
-        show heading: it => block({
-          let it-number = (it.numbering)(..counter(heading).at(it.location())) + it-sep
-          let hanging-indent = if hanging-indent == auto { measure(it-number).width } else { hanging-indent }
-          show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
-          it-number + it.body
-        })
-        body
-      }
-    }
-  } else if type(heading-numbering) == array {
-    theme = (body) => {
-      show: theme
-      set heading(numbering: (..nums) => {
-        let it-level = nums.pos().len()
-        let it-number-format = heading-numbering.at(it-level - 1, default: heading-numbering.last())
-        if it-number-format == none {
-          return none
-        }
-        if type(it-number-format) == str {
-          it-number-format = it-number-format
-        } else if type(it-number-format) == dictionary and it-number-format.keys().contains("format") {
-          it-number-format = it-number-format.format
-        } else {
-          panic("heading-numbering must be a string, dictionary or an array of strings/dictionaries")
-        }
-        numbering(it-number-format, ..nums)
-      })
-      show heading: it => block({
-        let it-numbering = heading-numbering.at(it.level - 1, default: heading-numbering.last())
-        if it-numbering == none {
-          it.body
-        } else if type(it-numbering) == dictionary {
-          let it-sep = _convert-heading-numbering-sep(it-numbering.sep)
-          let it-number = (it.numbering)(..counter(heading).at(it.location())) + it-sep
-          let first-line-indent = it-numbering.at("first-line-indent", default: 0em)
-          let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number).width)
-          show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
-          it-number + it.body
-        } else {
-          it
-        }
-      })
+      show: _config-heading-numbering(heading-numbering)
       body
     }
   }
