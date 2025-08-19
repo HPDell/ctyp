@@ -38,7 +38,7 @@
           let hanging-indent = heading-numbering.at("hanging-indent", default: measure(it-number).width)
           set align(heading-numbering.at("align", default: left))
           show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
-          it-number + it.body
+          box(width: hanging-indent, it-number) + it.body
         }
         body
       } else {
