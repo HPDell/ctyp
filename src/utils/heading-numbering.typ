@@ -10,6 +10,14 @@
   }
 }
 
+#let _heading-container(heading-numbering, body) = context {
+  if type(heading-numbering) == dictionary and heading-numbering.at("runin", default: false) {
+    box(body)
+  } else {
+    body
+  }
+}
+
 #let _config-heading-numbering(heading-numbering) = {
   if type(heading-numbering) == str {
     (body) => {
@@ -28,6 +36,7 @@
           let it-sep = _convert-heading-numbering-sep(heading-numbering.sep)
           let it-number = (it.numbering)(..counter(heading).at(it.location())) + it-sep
           let hanging-indent = heading-numbering.at("hanging-indent", default: measure(it-number).width)
+          set align(heading-numbering.at("align", default: left))
           show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
           it-number + it.body
         }
@@ -41,9 +50,6 @@
       set heading(numbering: (..nums) => {
         let it-level = nums.pos().len()
         let it-number-format = heading-numbering.at(it-level - 1, default: heading-numbering.last())
-        if it-number-format == none {
-          return none
-        }
         if type(it-number-format) == str {
           it-number-format = it-number-format
         } else if type(it-number-format) == dictionary and it-number-format.keys().contains("format") {
@@ -51,23 +57,38 @@
         } else {
           panic("heading-numbering must be a string, dictionary or an array of strings/dictionaries")
         }
-        numbering(it-number-format, ..nums)
-      })
-      show heading: it => block({
-        let it-numbering = heading-numbering.at(it.level - 1, default: heading-numbering.last())
-        if it-numbering == none {
-          it.body
-        } else if type(it-numbering) == dictionary {
-          let it-sep = _convert-heading-numbering-sep(it-numbering.sep)
-          let it-number = (it.numbering)(..counter(heading).at(it.location())) + it-sep
-          let first-line-indent = it-numbering.at("first-line-indent", default: 0em)
-          let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number).width)
-          show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
-          it-number + it.body
+        if it-number-format == none {
+          none
         } else {
-          it
+          numbering(it-number-format, ..nums)
         }
       })
+      let heading-settings = heading-numbering.enumerate().map(((it-level, it-numbering)) => {
+        (body) => {
+          show heading.where(level: it-level + 1): it => {
+            let it-numbering = heading-numbering.at(it.level - 1, default: heading-numbering.last())
+            if it-numbering == none {
+              it.body
+            } else if type(it-numbering) == dictionary {
+              let it-sep = _convert-heading-numbering-sep(it-numbering.at("sep", default: 4pt))
+              let it-number = (it.numbering)(..counter(heading).at(it.location()))
+              let first-line-indent = it-numbering.at("first-line-indent", default: 0em)
+              let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number + it-sep).width)
+              set align(it-numbering.at("align", default: left))
+              show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
+              if it-number == none {
+                it.body
+              } else {
+                box(width: hanging-indent, it-number + it-sep) + it.body
+              }
+            } else {
+              it
+            }
+          }
+          body
+        }
+      }).reduce((lhs, rhs) => (body) => { lhs(rhs(body)) })
+      show: heading-settings
       body
     }
   } else {
