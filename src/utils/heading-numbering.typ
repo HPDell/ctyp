@@ -75,7 +75,7 @@
               let first-line-indent = it-numbering.at("first-line-indent", default: 0em)
               let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number + it-sep).width)
               set align(it-numbering.at("align", default: left))
-              show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
+              set par(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
               if it-number == none {
                 it.body
               } else {
