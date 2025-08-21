@@ -32,7 +32,7 @@
   if heading-numbering.keys().contains("sep") and heading-numbering.sep != auto {
     show heading: it => {
       let it-sep = _convert-heading-numbering-sep(heading-numbering.sep)
-      let it-number = (it.numbering)(..counter(heading).at(it.location())) + it-sep
+      let it-number = counter(heading).display(it.numbering) + it-sep
       let hanging-indent = heading-numbering.at("hanging-indent", default: measure(it-number).width)
       set align(heading-numbering.at("align", default: left))
       show: par.with(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
@@ -69,7 +69,7 @@
           it.body
         } else if type(it-numbering) == dictionary {
           let it-sep = _convert-heading-numbering-sep(it-numbering.at("sep", default: 4pt))
-          let it-number = (it.numbering)(..counter(heading).at(it.location()))
+          let it-number = counter(heading).display(it.numbering)
           let first-line-indent = it-numbering.at("first-line-indent", default: 0em)
           let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number + it-sep).width)
           set align(it-numbering.at("align", default: left))
