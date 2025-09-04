@@ -68,16 +68,25 @@
         if it-numbering == none {
           it.body
         } else if type(it-numbering) == dictionary {
+          let it-prefix = it-numbering.at("prefix", default: none)
+          if it-prefix != none {
+            it-prefix = it-prefix + sym.wj
+          }
+          let it-suffix = it-numbering.at("suffix", default: none)
+          if it-suffix != none {
+            it-suffix = it-suffix + sym.wj
+          }
           let it-sep = _convert-heading-numbering-sep(it-numbering.at("sep", default: 4pt))
           let it-number = counter(heading).display(it.numbering)
+          let it-number-full = it-prefix + it-number + it-sep + it-suffix
           let first-line-indent = it-numbering.at("first-line-indent", default: 0em)
-          let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number + it-sep).width)
+          let hanging-indent = it-numbering.at("hanging-indent", default: measure(it-number-full).width)
           set align(it-numbering.at("align", default: left))
           set par(first-line-indent: first-line-indent, hanging-indent: hanging-indent)
           if it-number == none {
             it.body
           } else {
-            box(width: hanging-indent, it-number + it-sep) + it.body
+            box(width: hanging-indent, it-number-full) + it.body
           }
         } else {
           it

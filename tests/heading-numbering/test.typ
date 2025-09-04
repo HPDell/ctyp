@@ -71,9 +71,6 @@
     ), "1.1", (
       format: none,
       align: center
-    ), (
-      format: none,
-      runin: true
     ))
   )
   #show: theme
@@ -81,4 +78,18 @@
   = 数组标题编号并测试悬挂缩进
 
   #test-content
+]
+
+#testcase[
+  #let (theme, (song, hei, kai, fang)) = ctyp(
+    heading-numbering: ((
+      format: "一",
+      sep: 0em,
+      suffix: "、",
+    ), "1.1")
+  )
+  #show: theme
+  = 编号引用 <sec:test>
+
+  测试引用@sec:test
 ]
