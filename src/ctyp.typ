@@ -97,9 +97,21 @@
   /// -> bool
   remove-cjk-break-space: true,
   /// 设置标题编号的样式。
-  /// 只接受函数 `numbering()` 函数中的合法的编号样式。
-  /// 如果为 `none`，则不显示编号。
-  /// -> str | none
+  /// 可以设置为单值或者数组。
+  /// 
+  /// 如果是单值，则用于所有级别的标题。
+  /// 接受的合法类型为
+  /// - `none`：无编号。
+  /// - `str`：字符串，接受所有 Typst 支持的编号格式，即 `numbering()` 函数可接受的值。
+  /// - `dictionary`：用于设置编号格式的字典，包含以下字段：
+  ///   - `format`：字符串，表示编号格式。也是接受所有 Typst 支持的编号格式。
+  ///   - `sep`：间隔，表示编号与标题内容之间的间隔。可以是任何合法的长度值。
+  ///   - `align`：对齐方式，可以是 `left`, `center`, `right` 中的一个。默认值为 `left`。
+  /// 
+  /// 如果是数组，则数组中的每个元素都是上面可接受的单值。
+  /// 当标题层级数大于数组长度时，使用数组中的最后一个元素来设置更高一级的标题。
+  /// 
+  /// -> none | str | dictionary | array
   heading-numbering: none,
 ) = {
   // Merge font-cjk-map with default options.
