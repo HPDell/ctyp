@@ -1,3 +1,4 @@
+/// [skip]
 #import "/lib.typ": *
 #import "@preview/kouhu:0.2.0": *
 #import "@preview/touying:0.6.1": *
