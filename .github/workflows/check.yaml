@@ -38,6 +38,17 @@ jobs:
           fi
       - name: Run CTyp tests
         run: tt run --no-fail-fast --use-system-fonts
+      
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: artifacts
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+            tests/**/ref/*.png
+          retention-days: 5
 
   test-windows:
     runs-on: windows-latest
@@ -66,6 +77,17 @@ jobs:
       - name: Run CTyp tests
         run: tt run --no-fail-fast --use-system-fonts
         shell: pwsh
+        
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: artifacts
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+            tests/**/ref/*.png
+          retention-days: 5
 
   test-macos:
     runs-on: macos-latest
@@ -92,3 +114,14 @@ jobs:
           fi
       - name: Run CTyp tests
         run: tt run --no-fail-fast --use-system-fonts
+      
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: artifacts
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+            tests/**/ref/*.png
+          retention-days: 5
