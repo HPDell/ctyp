@@ -93,3 +93,33 @@
 
   测试引用@sec:test
 ]
+
+#testcase[
+  #let (theme, (song, hei, kai, fang)) = ctyp(
+    heading-numbering: ((
+      format: "一",
+      sep: 1em
+    ), "1.1")
+  )
+  #show: theme
+
+  = 中文编号格式示例
+
+  #test-content
+]
+
+#testcase[
+  #let (theme, (song, hei, kai, fang)) = ctyp(
+    heading-numbering: ((
+      format: "一",
+      sep: 1em,
+      prefix: "第",
+      suffix: "章",
+    ), "1.1")
+  )
+  #show: theme
+
+  = 中文编号格式示例
+
+  #test-content
+]
