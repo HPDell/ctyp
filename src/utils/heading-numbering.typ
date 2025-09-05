@@ -90,18 +90,10 @@
       numbering(it-number-format, ..nums)
     }
   })
-  let heading-settings = heading-numbering.enumerate().map(((it-level, it-numbering)) => {
-    (body) => {
-      show heading.where(level: it-level + 1): _heading-show-rule.with(it-numbering)
-      body
-    }
-  })
-  heading-settings.push((body) => {
-    show heading: _heading-show-rule.with(heading-numbering.last())
-    body
-  })
-  heading-settings = heading-settings.reduce((lhs, rhs) => (body) => { lhs(rhs(body)) })
-  show: heading-settings
+  show heading: it => {
+    show: _heading-show-rule.with(heading-numbering.at(it.level - 1, default: heading-numbering.last()))
+    it
+  }
   body
 }
 
