@@ -68,6 +68,7 @@
 }
 
 #let _heading-show-rule(heading-numbering, it) = {
+  show: block.with(width: 100%, sticky: true)
   if heading-numbering == none {
     it.body
   } else if type(heading-numbering) == dictionary {
@@ -87,6 +88,7 @@
       first-line-indent: heading-numbering.first-line-indent,
       hanging-indent: heading-numbering.hanging-indent
     )
+    show: par
     if it-number == none {
       it.body
     } else {
