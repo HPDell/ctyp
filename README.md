@@ -17,7 +17,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 通过以下代码快速使用 CTyp 包的设置，默认使用 Fandol 字体（需自行安装）：
 
 ```typ
-#import "@preview/ctyp:0.1.1": ctyp
+#import "@preview/ctyp:0.2.0": ctyp
 #let (ctypset, cjk) = ctyp()
 #show: ctypset
 ```
@@ -28,7 +28,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 如果在 Typst Web App 环境中，可以直接使用 Noto CJK 字体系列。
 
 ```typ
-#import "@preview/ctyp:0.1.1": ctyp
+#import "@preview/ctyp:0.2.0": ctyp
 #let (ctypset, cjk) = ctyp(
   fontset-cjk: "noto"
 )
