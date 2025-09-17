@@ -9,22 +9,19 @@
 
 #let appendix(body) = {
   counter(heading).update(0)
-  set heading(numbering: (..nums) => {
-    let nums = nums.pos()
-    if nums.len() == 1 {
-      numbering("附录A", ..nums)
-    } else {
-      numbering("A.1.", ..nums)
-    }
-  })
-  show heading.where(level: 1): set heading(supplement: none)
+  set heading(numbering: "A.1")
+  show heading.where(level: 1): set heading(supplement: [附录])
+  show heading.where(level: 1): it => {
+    set par(first-line-indent: 0em)
+    [附录] + counter(heading).display(it.numbering) + box(width: 1em) + it.body
+  }
   body
 }
 
 #show: page-grid.with(width: 48, note-right: 8)
 
 #let (ctypset, (song, hei, kai, fang)) = ctyp(
-  fix-list-args: (inset: (left: 1em)),
+  heading-numbering: "1."
 )
 #show: ctypset
 #show: codly-init
@@ -69,6 +66,8 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
   由于 Typst 的中文排版支持仍不完善，该包只能提供非语言级的排版支持。
   并不保证能够实现所有中文排版需求。
 ]
+
+#outline(target: heading.where(level: 1).or(heading.where(level: 2)))
 
 = 快速开始
 
@@ -321,6 +320,87 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
   由于 Typst 的限制，页面设置不能放在 `ctyp()` 函数中。
   目前采用的是提供单独的 `page-grid()` 函数来设置页面。
   这也有一些额外的好处，例如可以与其他包结合使用。
+]
+
+= 标题编号设置
+
+#note-ctyp-arg[heading-numbering][标题编号设置。][默认值：`none`]
+Typst 提供了实现任何标题编号格式的能力，但这种方法往往会比较复杂。
+中文文档的标题设置通常也具有一定的规律性，可以通过配置参数来实现。
+该包提供了 `ctyp()` 函数的参数 `heading-numbering` 来设置标题编号。
+该参数可以接受多种类型的值：
+
+- *单值*：用于统一设置所有级别的标题的编号格式。包括以下几种：
+  - `none`：无编号。
+  - 字符串：接受所有 Typst 支持的编号格式，即 `numbering()` 函数可接受的值。
+  - 字典：用于设置编号格式的字典，包含以下字段：
+    - `format`：字符串，表示编号格式。也是接受所有 Typst 支持的编号格式。
+    - `sep`：间隔，表示编号与标题内容之间的间隔。可以是任何合法的长度值。
+    - `align`：对齐方式，可以是 `left`, `center`, `right` 中的一个。默认值为 `left`。
+    - `hanging-indent`：悬挂缩进。设置该值可调整标题悬挂缩进长度。默认为编号部分的宽度。
+    - `first-line-indent`：首行缩进。设置该值可调整标题首行缩进长度。默认值为 `0em`。
+    - `prefix`：前缀。表示编号前的内容，可以是任何内容。
+    - `suffix`：后缀。表示编号后的内容，可以是任何内容。
+- *数组*：数组中的每个元素都是上面可接受的单值。第 $i$ 个元素（从1开始算）用于设置第 $i$ 级标题的编号格式。如果数组长度小于标题级别，则使用数组中的最后一个元素来设置。
+
+#context[
+  #let current-heading-number = counter(heading.where(level: 1)).get()
+  #counter(heading).update(0)
+  #tip-box(title: [中文编号格式示例一])[
+    ```typ
+    #let (ctypset_, cjk_) = ctyp(
+      heading-numbering: ((
+        format: "一、",
+        sep: 0em
+      ), "1.1")
+    )
+    #show: ctypset_
+    = 这是一级标题
+    == 这是二级标题
+    ```
+    #set heading(outlined: false, bookmarked: false)
+    #let (ctypset_, cjk_) = ctyp(
+      heading-numbering: ((
+        format: "一、",
+        sep: 0em
+      ), "1.1")
+    )
+    #show: ctypset_
+    = 这是一级标题
+    == 这是二级标题
+  ]
+  #counter(heading).update(current-heading-number)
+]
+
+#context[
+  #let current-heading-number = counter(heading.where(level: 1)).get()
+  #counter(heading).update(0)
+  #tip-box(title: [中文编号格式示例二])[
+    ```typ
+    #let (ctypset_, cjk_) = ctyp(
+      heading-numbering: ((
+        format: "一",
+        sep: 1em,
+        align: center
+      ), "1.1")
+    )
+    #show: ctypset_
+    = 这是一级标题
+    == 这是二级标题
+    ```
+    #set heading(outlined: false, bookmarked: false)
+    #let (ctypset_, cjk_) = ctyp(
+      heading-numbering: ((
+        format: "一",
+        sep: 1em,
+        align: center
+      ), "1.1")
+    )
+    #show: ctypset_
+    = 这是一级标题
+    == 这是二级标题
+  ]
+  #counter(heading).update(current-heading-number)
 ]
 
 #show: appendix

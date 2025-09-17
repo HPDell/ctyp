@@ -1,6 +1,7 @@
 #import "./fonts/index.typ": *
 #import "./utils/enumitem.typ": enumitem
 #import "./utils/page-grid.typ": page-grid
+#import "./utils/heading-numbering.typ": _config-heading-numbering
 
 #let _default-cjk-regex = "[\p{Han}\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u201c\u201d\u2018\u2019\uff08\uff09\u300a\u300b\u3008\u3009\u3010\u3011\u300e\u300f\u300c\u300d\uff43\uff44\u3014\u3015\u2026\u2014\uff5e\uff4f\uffe5]"
 
@@ -82,6 +83,10 @@
   /// 如果为 true，将自动将引号转换为智能引号。
   /// -> bool
   fix-smartquote: true,
+  /// 是否修正列表的首行缩进。
+  /// 如果为 true，将应用 `fix-first-line-indent` 中定义的首行缩进。
+  /// -> bool
+  fix-first-line-indent: true,
   /// 重置粗体的 delta 值为 0。
   /// 基于此实现在 `font-cjk-map` 中指定元素的字重。
   /// -> int
@@ -90,7 +95,28 @@
   /// 如果为 true，将移除 CJK 字符之间的断行空格。
   /// 这用于防止 CJK 字符被空格断开。
   /// -> bool
-  remove-cjk-break-space: true
+  remove-cjk-break-space: true,
+  /// 设置标题编号的样式。
+  /// 可以设置为单值或者数组。
+  /// 
+  /// 如果是单值，则用于所有级别的标题。
+  /// 接受的合法类型为：
+  /// - `none`：无编号。
+  /// - `str`：字符串，接受所有 Typst 支持的编号格式，即 `numbering()` 函数可接受的值。
+  /// - `dictionary`：用于设置编号格式的字典，包含以下字段：
+  ///   - `format`：字符串，表示编号格式。也是接受所有 Typst 支持的编号格式。
+  ///   - `sep`：间隔，表示编号与标题内容之间的间隔。可以是任何合法的长度值。
+  ///   - `align`：对齐方式，可以是 `left`, `center`, `right` 中的一个。默认值为 `left`。
+  ///   - `first-line-indent`: 首行缩进值。可以是任何合法的长度值。默认值为 `0em`。
+  ///   - `hanging-indent`: 悬挂缩进值。默认值为 `auto`，通过测量编号宽度自动设置。也可以是任何合法的长度值，此时不在测量编号宽度，而是使用指定的值。
+  ///   - `prefix`：前缀，表示编号前的内容。可以是任何合法的内容。
+  ///   - `suffix`：后缀，表示编号后的内容。可以是任何合法的内容。
+  /// 
+  /// 如果是数组，则数组中的每个元素都是上面可接受的单值。
+  /// 当标题层级数大于数组长度时，使用数组中的最后一个元素来设置更高一级的标题。
+  /// 
+  /// -> none | str | dictionary | array
+  heading-numbering: none,
 ) = {
   // Merge font-cjk-map with default options.
   let fontset-cjk = if fontset-cjk == auto {
@@ -198,19 +224,8 @@
     show heading: _apply-font-to-cjk.with(..font-select.heading)
     /// [Font Settings] End
     
-    /// [Paragraph Settings] Begin
-    /// This region apply paragraph settings to specific elements.
-    set par(first-line-indent: (amount: 2em, all: true), justify: true)
-    
+    set par(justify: true)
     show heading: set block(above: 1em, below: 1em)
-    set heading(numbering: "1.1.")
-    show quote.where(block: false): set par(
-      first-line-indent: (amount: 1em, all: true)
-    )
-    show quote.where(block: false).and(quote.where(quotes: false)): set par(
-      first-line-indent: (amount: 2em, all: true)
-    )
-    /// [Paragraph Settings] End
     
     /// [Other Settings] Begin
     show quote.where(block: true): body => {
@@ -257,6 +272,32 @@
       body
     }
   }
+  /// [Paragraph Settings] Begin
+  /// This region apply paragraph settings to specific elements.
+  if fix-first-line-indent {
+    theme = (body) => {
+      show: theme
+      set par(first-line-indent: (amount: 2em, all: true))
+      show quote.where(block: false): set par(
+        first-line-indent: (amount: 1em, all: true)
+      )
+      show quote.where(block: false).and(quote.where(quotes: false)): set par(
+        first-line-indent: (amount: 2em, all: true)
+      )
+      body
+    }
+  }
+  /// [Paragraph Settings] End
+  
+  /// [Heading Numbering] Begin
+  if heading-numbering != none {
+    theme = (body) => {
+      show: theme
+      show: _config-heading-numbering(heading-numbering)
+      body
+    }
+  }
+  /// [Heading Numbering] End
   let font-utils = fontset-cjk.family.pairs().map(((k, v)) => { (
     k, 
     (body, weight: "regular", latin: "serif") => {
