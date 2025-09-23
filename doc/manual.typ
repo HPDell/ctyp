@@ -1,5 +1,5 @@
 #import "@preview/tidy:0.4.3"
-#import "@local/ctyp:0.1.1": ctyp, fandol-fontset, page-grid
+#import "@local/ctyp:0.2.0": ctyp, fandol-fontset, page-grid
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.8": *
 #codly(languages: codly-languages)
@@ -56,7 +56,7 @@
   #set align(center)
   #text(size: 1.5em, strong[CTyp 使用手册])
   
-  #emph[版本: 0.1.1]
+  #emph[版本: 0.2.0]
 ]
 
 CTyp 是一个用于提供 Typst 中文排版支持的包。
@@ -74,7 +74,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 通过以下代码快速使用 CTyp 包的设置：
 
 ```typ
-#import "@local/ctyp:0.1.1": ctyp
+#import "@preview/ctyp:0.2.0": ctyp
 #let (ctypset, cjk) = ctyp()
 #show: ctypset
 ```
@@ -86,7 +86,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 在 Typst Web App 环境中，可以直接使用 Noto CJK 字体系列，通过以下代码进行设置：
 
 ```typ
-#import "@preview/ctyp:0.1.1": *
+#import "@preview/ctyp:0.2.0": *
 #let (ctypset, cjk) = ctyp(
   fontset-cjk: "noto"
 )
@@ -308,7 +308,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 
 #tip-box(title: [页面设置])[
 ```typ
-#import "@local/ctyp:0.1.1": page-grid
+#import "@local/ctyp:0.2.0": page-grid
 #show: page-grid.with(
   width: 45,
   height: 70
