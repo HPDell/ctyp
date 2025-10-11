@@ -14,14 +14,18 @@
   inset: (left: 0em)
 )
 
+#let default-list-markers = (sym.circle.filled, sym.triangle.r.filled, sym.square.filled).map(it => text(it, baseline: -.1em))
+
+#let default-enum-numberers = ("1)", "a)", "i.")
+
 /// 自定义列表和枚举布局，修复符号和文字不对齐的问题。
 #let enumitem(
   /// 符号列表可选用的符号。将循环使用。
   /// -> array
-  marker: (sym.circle.filled, sym.triangle.r.filled, sym.dash),
+  marker: default-list-markers,
   /// 编号列表可选用的编号格式。将循环使用。
   /// -> array
-  numberer: ("1)", "a)", "i)"),
+  numberer: default-enum-numberers,
   /// 是否使用紧凑布局。
   /// 紧凑布局会使用 `par.leading` 作为列表项目之间的间隔，
   /// 否则使用 `par.spacing`。
