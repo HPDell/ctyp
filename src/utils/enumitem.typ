@@ -1,3 +1,5 @@
+#import "@preview/elembic:1.1.1" as e: field, element, types
+
 #let mod(x, y) = {
   if x < y {
     x
@@ -14,9 +16,46 @@
   inset: (left: 0em)
 )
 
-#let default-list-markers = (sym.circle.filled, sym.triangle.r.filled, sym.square.filled).map(it => text(it, baseline: -.1em))
+#let ItemLabel = element.declare(
+  "ItemLabel",
+  prefix: "@preview/ctyp,v0.2.1",
+  fields: (
+    field("template", content, required: true),
+    field("width", length, default: 1em),
+    field("sep", length, default: 0em),
+    field("alignment", alignment, default: left),
+    field("stroke", types.option(stroke), default: none)
+  ),
+  display: it => box(
+    width: it.width,
+    inset: (right: it.sep),
+    stroke: it.stroke,
+    align(it.alignment, it.template)
+  ),
+)
 
-#let default-enum-numberers = ("1)", "a)", "i.")
+#let EnumLabel = element.declare(
+  "EnumLabel",
+  prefix: "@preview/ctyp,v0.2.1",
+  fields: (
+    field("numbering", str, required: true),
+    field("width", length, default: 1em),
+    field("sep", length, default: 0em),
+    field("alignment", alignment, default: left),
+    field("stroke", types.option(stroke), default: none),
+    field("body", content)
+  ),
+  display: it => box(
+    width: it.width,
+    inset: (right: it.sep),
+    stroke: it.stroke,
+    align(it.alignment, it.body)
+  ),
+)
+
+#let default-list-markers = (sym.circle.filled, sym.triangle.r.filled, sym.square.filled).map(it => text(it, baseline: -.1em)).map(it => ItemLabel(it, width: 0.5em))
+
+#let default-enum-numberers = ("1)", "a)", "i.").map(it => EnumLabel(it, width: 1.5em, alignment: right))
 
 /// 自定义列表和枚举布局，修复符号和文字不对齐的问题。
 #let enumitem(
@@ -71,29 +110,24 @@
     }
   }
   let item-template(
-    label-width: 1em,
-    label-sep: label-sep,
-    alignment: left,
-    label: [],
+    label,
     body: []
-  ) = block(
-    inset: (left: indent + label-width + body-indent),
-    stroke: if (debug) { green + 1pt } else { none },
-    above: spacing,
-    below: spacing,
-    {
-      set par(first-line-indent: (amount: 0em, all: true), hanging-indent: 0em)
-      box(
-        width: 0em,
-        move(box(
-          width: label-width,
-          inset: (right: label-sep),
-          stroke: if (debug) { red } else { none },
-          align(alignment, label)
-        ), dx: - label-width - body-indent)
-      ) + body
-    }
-  )
+  ) = {
+    let label-width = e.fields(label).width
+    block(
+      inset: (left: indent + label-width + body-indent),
+      stroke: if (debug) { green + 1pt } else { none },
+      above: spacing,
+      below: spacing,
+      {
+        set par(first-line-indent: (amount: 0em, all: true), hanging-indent: 0em)
+        box(
+          width: 0em,
+          move(label, dx: - label-width - body-indent)
+        ) + body
+      }
+    )
+  }
   let queue = ((
     marker: none,
     body: []
@@ -110,7 +144,7 @@
   while cur.at(0) < cur-max.at(0) {
     if cur.at(depth) >= cur-max.at(depth) {
       let qe = queue.pop()
-      queue.last().body += item-template(..qe)
+      queue.last().body += item-template(qe.label, body: qe.body)
       let _ = cur.pop()
       let _ = cur-max.pop()
       if cur-type.len() > 0 {
@@ -157,7 +191,6 @@
       if "children" in elem.body.fields() and elem.body.children.any(is-elem-item) {
         queue.push((
           label: label,
-          label-width: marker-width,
           body: []
         ))
         depth += 1
@@ -166,12 +199,11 @@
       } else {
         queue.push((
           label: label,
-          label-width: marker-width,
           body: elem.body
         ))
         cur.at(depth) += 1
         let qe = queue.pop()
-        queue.last().body += item-template(..qe)
+        queue.last().body += item-template(qe.label, body: qe.body)
       }
     } else if elem.func() == enum.item {
       if cur-type.len() == 0 {
@@ -194,12 +226,13 @@
       }
       let number = cur-number.at(depth)
       cur-number.at(depth) += 1
-      let label = numbering(numberer.at(cur-numberer), number)
+      let cur-numberer-fields = e.fields(numberer.at(cur-numberer))
+      let cur-numberer-template = cur-numberer-fields.remove("numbering")
+      let label-number = numbering(cur-numberer-template, number)
+      let label = EnumLabel(cur-numberer-template, ..cur-numberer-fields, body: label-number)
       if "children" in elem.body.fields() and elem.body.children.any(is-elem-item) {
         queue.push((
           label: label,
-          label-width: number-width,
-          alignment: right,
           body: []
         ))
         depth += 1
@@ -208,13 +241,11 @@
       } else {
         queue.push((
           label: label,
-          label-width: number-width,
-          alignment: right,
           body: elem.body
         ))
         cur.at(depth) += 1
         let qe = queue.pop()
-        queue.last().body += item-template(..qe)
+        queue.last().body += item-template(qe.label, body: qe.body)
       }
     } else {
       queue.last().body += elem
