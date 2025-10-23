@@ -54,10 +54,11 @@
 )
 
 #let convert-content-to-marker(it) = {
-  if e.types.typeid(it) == symbol {
-    ItemLabel(it, width: 0.5em, sep: 0em, alignment: left)
-  } else {
+  let casted = e.types.cast(it, ItemLabel)
+  if casted.first() {
     it
+  } else {
+    ItemLabel(it, width: 0.5em, sep: 0em, alignment: right)
   }
 }
 
