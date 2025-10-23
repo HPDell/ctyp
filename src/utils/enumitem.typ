@@ -53,9 +53,25 @@
   ),
 )
 
-#let default-list-markers = (sym.circle.filled, sym.triangle.r.filled, sym.square.filled).map(it => text(it, baseline: -.1em)).map(it => ItemLabel(it, width: 0.5em))
+#let convert-content-to-marker(it) = {
+  if type(it) == content {
+    ItemLabel(it, width: 0.5em, sep: 0em, alignment: left)
+  } else {
+    it
+  }
+}
 
-#let default-enum-numberers = ("1)", "a)", "i.").map(it => EnumLabel(it, width: 1.5em, alignment: right))
+#let convert-str-to-numberer(it) = {
+  if type(it) == str {
+    EnumLabel(it, width: 1.5em, sep: 0em, alignment: right)
+  } else {
+    it
+  }
+}
+
+#let default-list-markers = (sym.circle.filled, sym.triangle.r.filled, sym.square.filled).map(it => text(it, baseline: -.1em)).map(convert-content-to-marker)
+
+#let default-enum-numberers = ("1)", "a)", "i.").map(convert-str-to-numberer)
 
 /// 自定义列表和枚举布局，修复符号和文字不对齐的问题。
 #let enumitem(
@@ -101,6 +117,8 @@
   children
 ) = context {
   let block-args = (:..default-block-args, ..block-args.named())
+  let marker = marker.map(convert-content-to-marker)
+  let numberer = numberer.map(convert-str-to-numberer)
   show: block.with(..block-args)
   let spacing = if spacing == auto {
     if tight {
