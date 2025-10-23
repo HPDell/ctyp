@@ -54,7 +54,7 @@
 )
 
 #let convert-content-to-marker(it) = {
-  if type(it) == content {
+  if e.types.typeid(it) == symbol {
     ItemLabel(it, width: 0.5em, sep: 0em, alignment: left)
   } else {
     it
