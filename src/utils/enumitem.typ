@@ -20,7 +20,7 @@
   "ItemLabel",
   prefix: "@preview/ctyp,v0.2.1",
   fields: (
-    field("template", content, required: true),
+    field("symbol", content, required: true),
     field("width", length, default: 1em),
     field("sep", length, default: 0em),
     field("alignment", alignment, default: left),
@@ -30,7 +30,7 @@
     width: it.width,
     inset: (right: it.sep),
     stroke: it.stroke,
-    align(it.alignment, it.template)
+    align(it.alignment, it.symbol)
   ),
 )
 

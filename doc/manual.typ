@@ -299,6 +299,36 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
   [`..block-args`], [捕获所有其他传递到 `block` 函数的参数。], []
 )]
 
+== 列表编号设置
+
+自 v0.3.0 版本起，使用 CTyp 包提供两个函数 `ItemLabel` 和 `EnumLabel` 可以实现对列表每级编号格式参数的设置。
+这两个函数分别接受一个位置参数，设置符号或者编号格式。
+此外，可以单独设置以下参数：
+
+/ `width`: 列表编号的宽度。
+/ `sep`: 编号与内容之间的间隔。
+/ `alignment`: 编号的对齐方式。可选值为 `left`, `center`, `right`。
+
+例如，可以通过以下代码设置编号列表的编号格式：
+
+```typ
+#let (theme, _) = ctyp(
+  fix-enum-args: (
+    numberer: (
+      EnumLabel("1.", width: 1em, alignment: left),
+      "a.",
+      EnumLabel("i)", width: 1em, alignment: right),
+    )
+  ),
+  fix-list-args: (
+    marker: (
+      ItemLabel(sym.suit, width: 1em),
+      sym.dash
+    )
+  )
+)
+```
+
 = 页面设置
 
 #note-ctyp-func[page-grid][设置页芯大小，优先保证宽度为整字符数，避免过多分散对齐问题。]
