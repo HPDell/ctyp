@@ -10,3 +10,7 @@
 #import "utils/page-grid.typ": (
   page-grid
 )
+#import "utils/enumitem.typ": (
+  ItemLabel,
+  EnumLabel,
+)

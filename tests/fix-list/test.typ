@@ -89,3 +89,31 @@
         + 项目2.3.3.2
           + 项目2.3.3.2.1
 ]
+
+#testcase[
+  #let (theme, _) = ctyp(
+    fix-enum-args: (
+      numberer: (
+        EnumLabel("1.", width: 1em, alignment: left),
+        "a.",
+        EnumLabel("i)", width: 1em, alignment: right),
+      )
+    ),
+    fix-list-args: (
+      marker: (
+        ItemLabel(sym.suit, width: 1em),
+        sym.dash
+      )
+    )
+  )
+  #show: theme
+
+  = 设置编号格式
+
+  + 测试
+    + 测试
+      + 测试
+  
+  - 测试
+    - 测试
+]
