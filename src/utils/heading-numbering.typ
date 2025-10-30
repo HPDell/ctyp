@@ -73,26 +73,30 @@
     it.body
   } else if type(heading-numbering) == dictionary {
     let heading-numbering = _make-heading-numbering-config(..heading-numbering)
-    let it-number = counter(heading).display(it.numbering)
-    let it-number-full = (
-      heading-numbering.prefix,
-      it-number,
-      heading-numbering.suffix,
-      heading-numbering.sep,
-    ).join()
-    if heading-numbering.hanging-indent == auto {
-      heading-numbering.hanging-indent = measure(it-number-full).width
-    }
     set align(heading-numbering.at("align", default: left))
-    set par(
-      first-line-indent: heading-numbering.first-line-indent,
-      hanging-indent: heading-numbering.hanging-indent
-    )
-    show: par
-    if it-number == none {
+    if (it.numbering == none) {
+      show: par.with(first-line-indent: 0em, hanging-indent: 0em)
       it.body
     } else {
-      box(width: heading-numbering.hanging-indent, it-number-full) + it.body
+      let it-number = counter(heading).display(it.numbering)
+      let it-number-full = (
+        heading-numbering.prefix,
+        it-number,
+        heading-numbering.suffix,
+        heading-numbering.sep,
+      ).join()
+      if heading-numbering.hanging-indent == auto {
+        heading-numbering.hanging-indent = measure(it-number-full).width
+      }
+      show: par.with(
+        first-line-indent: heading-numbering.first-line-indent,
+        hanging-indent: heading-numbering.hanging-indent
+      )
+      if it-number == none {
+        it.body
+      } else {
+        box(width: heading-numbering.hanging-indent, it-number-full) + it.body
+      }
     }
   } else {
     it
