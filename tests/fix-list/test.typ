@@ -94,14 +94,14 @@
   #let (theme, _) = ctyp(
     fix-enum-args: (
       numberer: (
-        EnumLabel("1.", width: 1em, alignment: left),
+        enum-label("1.", width: 1em, alignment: left),
         "a.",
-        EnumLabel("i)", width: 1em, alignment: right),
+        enum-label("i)", width: 1em, alignment: right),
       )
     ),
     fix-list-args: (
       marker: (
-        ItemLabel(sym.suit, width: 1em),
+        item-label(sym.suit, width: 1em),
         sym.dash
       )
     )

@@ -301,7 +301,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 
 == 列表编号设置
 
-自 v0.3.0 版本起，使用 CTyp 包提供两个函数 `ItemLabel` 和 `EnumLabel` 可以实现对列表每级编号格式参数的设置。
+自 v0.3.0 版本起，使用 CTyp 包提供两个函数 `item-label` 和 `enum-label` 可以实现对列表每级编号格式参数的设置。
 这两个函数分别接受一个位置参数，设置符号或者编号格式。
 此外，可以单独设置以下参数：
 
@@ -315,14 +315,14 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 #let (theme, _) = ctyp(
   fix-enum-args: (
     numberer: (
-      EnumLabel("1.", width: 1em, alignment: left),
+      enum-label("1.", width: 1em, alignment: left),
       "a.",
-      EnumLabel("i)", width: 1em, alignment: right),
+      enum-label("i)", width: 1em, alignment: right),
     )
   ),
   fix-list-args: (
     marker: (
-      ItemLabel(sym.suit, width: 1em),
+      item-label(sym.suit, width: 1em),
       sym.dash
     )
   )
