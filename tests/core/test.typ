@@ -16,6 +16,20 @@
 #testcase[
   #let (theme, (song, hei, kai, fang)) = ctyp()
   #show: theme
+  
+  = 元素字体映射
+
+  #title[临江仙]
+
+  = 标题
+
+  滚滚长江东逝水，*浪花淘尽英雄。*
+  _是非成败转头空。_`青山依旧在，几度夕阳红`。
+]
+
+#testcase[
+  #let (theme, (song, hei, kai, fang)) = ctyp()
+  #show: theme
 
   = 字体函数调用
 

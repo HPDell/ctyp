@@ -11,5 +11,6 @@
     emph: (cjk: "kai", latin: "serif"),
     raw: (cjk: "fang", latin: "mono"),
     heading: (cjk: "song:bold", latin: "serif"),
+    title: (cjk: "song:bold", latin: "serif"),
   )
 )
