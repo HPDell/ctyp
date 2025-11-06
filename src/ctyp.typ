@@ -205,7 +205,7 @@
 
     /// [Font Settings] Begin
     /// This region apply fonts to default text, emph, and strong.
-    let font-select = ("text", "emph", "strong", "raw", "heading").map(k => (k, _font-latin-cover(k))).to-dict()
+    let font-select = ("text", "emph", "strong", "raw", "heading", "title").map(k => (k, _font-latin-cover(k))).to-dict()
     set text(font: font-select.text.font)
     show: if fix-smartquote { (body) => {
       show smartquote: set text(font: font-select.text.font.at(0).name)
@@ -222,6 +222,8 @@
     show raw: _apply-font-to-cjk.with(..font-select.raw)
     show heading: set text(font: font-select.heading.font)
     show heading: _apply-font-to-cjk.with(..font-select.heading)
+    show title: set text(font: font-select.title.font)
+    show title: _apply-font-to-cjk.with(..font-select.title)
     /// [Font Settings] End
     
     set par(justify: true)
