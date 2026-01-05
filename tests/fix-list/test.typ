@@ -152,7 +152,7 @@
   + 迭代执行以下步骤：
     + 对于每组变量 $beta_j$：
       + 计算 $tilde(y) = y - sum_(l eq.not j) x_(i j) beta_j (u_i)$
-      + 估计 $ hat(beta_j)(u_i) = (X_j^T W_(i) X_j)^(-1) $
+      + 估计 $ hat(beta)_j (u_i) = (X_j^T W_(i) X_j)^(-1) $
     + 计算残差平方和 RSS。
   + 如果 RSS 收敛，则停止迭代。
 ]
