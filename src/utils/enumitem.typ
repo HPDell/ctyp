@@ -152,7 +152,7 @@
     body: []
   ),)
   let cur = (0,)
-  let cur-max = (children.len(),)
+  let cur-max = ("r": children.len(),)
   let cur-number = ()
   let cur-type = ()
   let cur-marker = 0
@@ -160,14 +160,21 @@
   let depth = 0
   let elem = children
   let elem-last = none
-  while cur.at(0) < cur-max.at(0) {
-    if cur.at(depth) >= cur-max.at(depth) {
+  while cur.at(0) < cur-max.at("r") {
+    let parent-path = (("r",) + cur.slice(0, -1)).map(str).join("-")
+    if cur.at(depth) >= cur-max.at(parent-path) {
       let qe = queue.pop()
       queue.last().body += item-template(qe.label, body: qe.body)
       let _ = cur.pop()
-      let _ = cur-max.pop()
+      // let _ = cur-max.pop()
       if cur-type.len() > 0 {
-        let _ = cur-type.pop()
+        let ct = cur-type.pop()
+        let _ = cur-number.pop()
+        if ct == "enum" {
+          cur-numberer = mod(cur-numberer - 1, numberer.len())
+        } else {
+          cur-marker = mod(cur-marker + 1, marker.len())
+        }
       }
       depth -= 1
       cur.last() += 1
@@ -212,14 +219,17 @@
           label: label,
           body: []
         ))
+        let cur-path = (("r",) + cur).map(str).join("-")
+        cur-max.insert(cur-path, elem.body.children.len())
         depth += 1
         cur.push(0)
-        cur-max.push(elem.body.children.len())
       } else {
         queue.push((
           label: label,
           body: elem.body
         ))
+        let cur-path = (("r",) + cur).map(str).join("-")
+        cur-max.insert(cur-path, 0)
         cur.at(depth) += 1
         let qe = queue.pop()
         queue.last().body += item-template(qe.label, body: qe.body)
@@ -254,23 +264,27 @@
           label: label,
           body: []
         ))
+        let cur-path = (("r",) + cur).map(str).join("-")
+        cur-max.insert(cur-path, elem.body.children.len())
         depth += 1
         cur.push(0)
-        cur-max.push(elem.body.children.len())
       } else {
         queue.push((
           label: label,
           body: elem.body
         ))
+        let cur-path = (("r",) + cur).map(str).join("-")
+        cur-max.insert(cur-path, 0)
         cur.at(depth) += 1
         let qe = queue.pop()
         queue.last().body += item-template(qe.label, body: qe.body)
       }
     } else {
       queue.last().body += elem
+      let cur-path = (("r",) + cur).map(str).join("-")
+      cur-max.insert(cur-path, 0)
       cur.at(depth) += 1
     }
     elem-last = elem
   }
-  queue.pop().body
-}
+  queue.pop().body}
