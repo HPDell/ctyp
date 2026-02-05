@@ -16,7 +16,7 @@ categories = [
     "text",
     "languages",
 ]
-compiler = "0.13.1"
+compiler = "0.14.1"
 exclude = ["*.pdf", "thumbnail.png", ".gitignore", "doc", "tests"]
 
 [tool]
