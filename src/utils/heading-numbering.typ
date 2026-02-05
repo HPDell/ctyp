@@ -89,11 +89,13 @@
         heading-numbering.hanging-indent = measure(it-number-full).width
       }
       show: par.with(
-        first-line-indent: heading-numbering.first-line-indent,
-        hanging-indent: heading-numbering.hanging-indent
+        first-line-indent: (amount: heading-numbering.first-line-indent, all: true),
+        hanging-indent: heading-numbering.hanging-indent,
       )
       if it-number == none {
         it.body
+      } else if heading-numbering.hanging-indent.to-absolute() < heading-numbering.first-line-indent.to-absolute() {
+        it-number-full + it.body
       } else {
         box(width: heading-numbering.hanging-indent, it-number-full) + it.body
       }

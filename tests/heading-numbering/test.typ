@@ -123,3 +123,27 @@
 
   #test-content
 ]
+
+#testcase[
+  #let (theme, (song, hei, kai, fang)) = ctyp(
+    heading-numbering: ((
+      format: "一",
+      sep: 1em,
+    ), (
+      format: "1.1",
+      sep: " ",
+      first-line-indent: 22pt,
+      hanging-indent: 0em
+    ), (
+      format: "1.1",
+      sep: " ",
+      first-line-indent: 2em,
+      hanging-indent: 4em
+    ))
+  )
+  #show: theme
+
+  = 中文编号格式示例
+
+  #test-content
+]
