@@ -18,7 +18,7 @@
 
 #let item-label = element.declare(
   "item-label",
-  prefix: "@preview/ctyp,v0.3.0",
+  prefix: "@preview/ctyp,v",
   fields: (
     field("symbol", content, required: true),
     field("width", length, default: 1em),
@@ -36,7 +36,7 @@
 
 #let enum-label = element.declare(
   "enum-label",
-  prefix: "@preview/ctyp,v0.3.0",
+  prefix: "@preview/ctyp,v",
   fields: (
     field("numbering", str, required: true),
     field("width", length, default: 1em),
