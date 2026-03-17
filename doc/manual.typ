@@ -1,5 +1,5 @@
 #import "@preview/tidy:0.4.3"
-#import "@local/ctyp:0.3.1": ctyp, fandol-fontset, page-grid
+#import "@preview/ctyp:0.3.1": ctyp, fandol-fontset, page-grid
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.8": *
 #codly(languages: codly-languages)
