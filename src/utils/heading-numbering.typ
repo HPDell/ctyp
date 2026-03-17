@@ -109,7 +109,11 @@
   let heading-numbering = _make-heading-numbering-config(..heading-numbering)
   set heading(numbering: (..nums) => {
     let counts = nums.pos();
-    numbering(heading-numbering.format, ..counts)
+    if type(heading-numbering.format) == function {
+      (heading-numbering.format)(..counts)
+    } else {
+      numbering(heading-numbering.format, ..counts)
+    }
   })
   show heading: _heading-show-rule.with(heading-numbering)
   body
