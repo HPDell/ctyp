@@ -44,7 +44,7 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 - 列表符号/编号基线位置修复
 - 标题格式控制
 
-具体功能请参考[使用手册](https://github.com/HPDell/ctyp/blob/master/doc/manual.pdf)或 Wiki。
+具体功能请参考[使用手册](doc/manual.pdf)或 Wiki。
 
 ## 开发路线
 
