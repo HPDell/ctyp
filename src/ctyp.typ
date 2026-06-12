@@ -72,7 +72,7 @@
   /// 是否修正列表和枚举的样式。
   /// 如果为 true，将应用 `fix-list-args` 和 `fix-enum-args` 中定义的样式。
   /// -> bool
-  fix-list-enum: true,
+  fix-list-enum: false,
   /// 接受一个字典，定义列表样式的参数。详细参数见 @enumitem 函数。
   /// -> dictionary
   fix-list-args: (:),
