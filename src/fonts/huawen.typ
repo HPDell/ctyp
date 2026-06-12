@@ -17,5 +17,6 @@
     emph: (cjk: "kai", latin: "serif"),
     raw: (cjk: "fang", latin: "mono"),
     heading: (cjk: "zhongsong", latin: "serif"),
+    title: (cjk: "hei", latin: "serif"),
   )
 )

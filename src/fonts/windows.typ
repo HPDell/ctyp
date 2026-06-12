@@ -13,5 +13,6 @@
     emph: (cjk: "kai", latin: "serif"),
     raw: (cjk: "fang", latin: "mono"),
     heading: (cjk: "hei", latin: "serif"),
+    title: (cjk: "hei", latin: "serif"),
   )
 )
