@@ -1,9 +1,9 @@
 #import "@preview/tidy:0.4.3"
-#import "@local/ctyp:0.3.0": ctyp, fandol-fontset, page-grid
+#import "@preview/ctyp:0.3.1": ctyp, fandol-fontset, page-grid
 #import "@preview/codly:1.3.0": *
-#import "@preview/codly-languages:0.1.8": *
+#import "@preview/codly-languages:0.1.10": *
 #codly(languages: codly-languages)
-#import "@preview/theorion:0.3.3": cosmos
+#import "@preview/theorion:0.5.0": cosmos
 #import cosmos.default: *
 #import "@preview/marge:0.1.0": sidenote
 
@@ -56,13 +56,13 @@
   #set align(center)
   #text(size: 1.5em, strong[CTyp 使用手册])
   
-  #emph[版本: 0.3.0]
+  #emph[版本: 0.3.1]
 ]
 
 CTyp 是一个用于提供 Typst 中文排版支持的包。
 该包集成了一些常用的中文排版设置，用于提供快速的中文排版体验。
 
-#warning-box[
+#warning-block[
   由于 Typst 的中文排版支持仍不完善，该包只能提供非语言级的排版支持。
   并不保证能够实现所有中文排版需求。
 ]
@@ -74,19 +74,19 @@ CTyp 是一个用于提供 Typst 中文排版支持的包。
 通过以下代码快速使用 CTyp 包的设置：
 
 ```typ
-#import "@preview/ctyp:0.3.0": ctyp
+#import "@preview/ctyp:0.3.1": ctyp
 #let (ctypset, cjk) = ctyp()
 #show: ctypset
 ```
 
-#note-box[
+#note-block[
   变量名 `ctypset` 和 `cjk` 可以自行设置，无需使用文档中的名字。
 ]
 
 在 Typst Web App 环境中，可以直接使用 Noto CJK 字体系列，通过以下代码进行设置：
 
 ```typ
-#import "@preview/ctyp:0.3.0": *
+#import "@preview/ctyp:0.3.1": *
 #let (ctypset, cjk) = ctyp(
   fontset-cjk: "noto"
 )
@@ -152,7 +152,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 西文字体的字形为 `fontset.map.[element].latin` 中所用到的值，一般情况下是 `serif`, `sans`, `mono` 三种。
 该参数需要为这些字形指定具体的字体。
 
-#tip-box(title: [修改字体映射])[
+#tip-block(title: [修改字体映射])[
   将 `strong` 元素从使用#strong[黑体]改为使用宋体
 
   ```typ
@@ -186,7 +186,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 这通常也是 LaTeX 中的默认行为。
 如果偏好 Microsoft Word 的行为，即使用黑体的情况下加粗，那么可以在 `font-cjk-map` 中将对应元素的 `cjk` 字段增加一个 `:bold` 后缀。
 
-#important-box(title: [注意])[
+#important-block(title: [注意])[
   为了实现这一效果，`strong` 元素的 `delta` 被设置为 `0`，并全局生效。如果这导致了异常的行为，可以在 `ctyp()` 函数中设置 `reset-strong-delta` 参数为 `300`，则恢复默认行为。
   该值是 Typst 文档中标注的默认值。如果希望使用其他值，可以自行设置。
 ]
@@ -196,7 +196,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 函数 `ctyp()` 的返回值中的第二个元素 `cjk` 是一个字典。字典的键都来自于字体集合中 `family` 字段的键，也就是字形的名称；值是一个函数，直接使用可以修改内容的字体。
 这些函数提供一个参数 `weight` 用于设置字体粗细。
 
-#tip-box(title: [直接使用 CJK 字体])[
+#tip-block(title: [直接使用 CJK 字体])[
 ```typ
 #let (ctypset, cjk) = ctyp()
 #let (song, hei, kai, fang) = cjk
@@ -217,7 +217,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 这些函数中的西文字体默认使用 `ctyp()` 函数参数 `font-latin` 中的 `serif` 字体。
 若要修改西文字体，可以通过这些修改这些函数中的 `latin` 参数来实现，该参数接受 `font-latin` 中的键，或具体的字体名称。
 
-#tip-box(title: [使用CJK字体并设置西文字体])[
+#tip-block(title: [使用CJK字体并设置西文字体])[
   ```typ
   #fang(latin: "mono")[使用仿宋体和 monospace 西文字体。]
   ```
@@ -233,7 +233,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 考虑到中文书写时，往往不会使用智能引号，而是依赖输入法进行输入；而使用英文时，却往往需要智能引号，尤其是在纯文本编辑器中。
 因此，该包默认开启了智能引号的字体设置。
 
-#warning-box[
+#warning-block[
   该功能启用时，无论是中文还是英文，智能引号都会使用西文字体。反之，手动引号（使用 `sym.quote.l` 和 `sym.quote.r` 或与之相应的字符）都会使用中文字体。也就是说：
   - 中文应当使用“手动引号”，使用"智能引号"则会使用西文字体。
   - Users should use "smartquote" in Latin text; otherwise, “manual quotes” will result in CJK characters.
@@ -250,7 +250,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 该包重新设置了列表的样式，使得列表项目符号与内容基线对齐。
 该功能默认开启。
 
-#note-box(title: [修复后的列表])[
+#note-block(title: [修复后的列表])[
 + 项目1
 + 项目2
   - 项目2.1
@@ -266,7 +266,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 
 如果不喜欢该功能，可以将 `ctyp()` 函数的参数 `fix-list-enum` 设置为 `false`，则不修复列表样式。
 
-#tip-box(title: [不修复列表])[
+#tip-block(title: [不修复列表])[
 ```typ
 #let (theme, _) = ctyp(
   fix-list-enum: false,
@@ -336,9 +336,9 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 该包提供了一个 `page-grid()` 函数，可以根据字符数设置页面的边距。
 该函数接收 `page()` 函数的 `margin` 参数的所有合法值，但是对于 `width` 和 `height` 参数，必须是整数，表示字符的数量。
 
-#tip-box(title: [页面设置])[
+#tip-block(title: [页面设置])[
 ```typ
-#import "@local/ctyp:0.3.0": page-grid
+#import "@local/ctyp:0.3.1": page-grid
 #show: page-grid.with(
   width: 45,
   height: 70
@@ -346,7 +346,7 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 ```
 ]
 
-#note-box[
+#note-block[
   由于 Typst 的限制，页面设置不能放在 `ctyp()` 函数中。
   目前采用的是提供单独的 `page-grid()` 函数来设置页面。
   这也有一些额外的好处，例如可以与其他包结合使用。
@@ -364,7 +364,9 @@ Typst 提供了实现任何标题编号格式的能力，但这种方法往往�
   - `none`：无编号。
   - 字符串：接受所有 Typst 支持的编号格式，即 `numbering()` 函数可接受的值。
   - 字典：用于设置编号格式的字典，包含以下字段：
-    - `format`：字符串，表示编号格式。也是接受所有 Typst 支持的编号格式。
+    - `format`：表示编号格式。
+      - 接受所有 Typst 支持的编号格式。
+      - 接受一个函数 ```typst (..nums) => content``` 其中 `nums` 是一个数组，包含了当前标题的所有级别的编号。函数的返回值是一个内容，用于显示编号。
     - `sep`：间隔，表示编号与标题内容之间的间隔。可以是任何合法的长度值。
     - `align`：对齐方式，可以是 `left`, `center`, `right` 中的一个。默认值为 `left`。
     - `hanging-indent`：悬挂缩进。设置该值可调整标题悬挂缩进长度。默认为编号部分的宽度。
@@ -376,7 +378,7 @@ Typst 提供了实现任何标题编号格式的能力，但这种方法往往�
 #context[
   #let current-heading-number = counter(heading.where(level: 1)).get()
   #counter(heading).update(0)
-  #tip-box(title: [中文编号格式示例一])[
+  #tip-block(title: [中文编号格式示例一])[
     ```typ
     #let (ctypset_, cjk_) = ctyp(
       heading-numbering: ((
@@ -405,7 +407,7 @@ Typst 提供了实现任何标题编号格式的能力，但这种方法往往�
 #context[
   #let current-heading-number = counter(heading.where(level: 1)).get()
   #counter(heading).update(0)
-  #tip-box(title: [中文编号格式示例二])[
+  #tip-block(title: [中文编号格式示例二])[
     ```typ
     #let (ctypset_, cjk_) = ctyp(
       heading-numbering: ((

@@ -43,7 +43,6 @@ jobs:
             --exclude=.gitignore \
             --exclude=.vscode \
             --exclude=packages \
-            --exclude=doc \
             --exclude=tests \
             ../ \
             packages/preview/${{ env.PACKAGE_NAME }}/$PKG_VERSION/

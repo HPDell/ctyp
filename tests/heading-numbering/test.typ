@@ -147,3 +147,22 @@
 
   #test-content
 ]
+
+#testcase[
+  #let (theme, (song, hei, kai, fang)) = ctyp(
+    heading-numbering: ((
+      format: "一",
+      sep: 1em,
+    ), (
+      format: (..nums) => numbering("1.1", ..nums.pos().slice(1)),
+      sep: " ",
+      first-line-indent: 22pt,
+      hanging-indent: 0em
+    ))
+  )
+  #show: theme
+
+  = 使用函数的编号格式
+
+  #test-content
+]
