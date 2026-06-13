@@ -9,5 +9,6 @@
     emph: (cjk: "song:underline", latin: "serif"),
     raw: (cjk: "song", latin: "mono"),
     heading: (cjk: "song:bold", latin: "serif"),
+    title: (cjk: "hei", latin: "serif"),
   )
 )
