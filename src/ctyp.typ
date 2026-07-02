@@ -194,7 +194,7 @@
         name: latin,
         covers: "latin-in-cjk"
       ), font-cjk-name),
-      weight: if font-weight == none { 400 } else { _default-weight-map.at(font-weight, default: 400) },
+      weight: if font-weight == none { "bold" } else { _default-weight-map.at(font-weight, default: "bold") },
       style: font-style
     )
     
