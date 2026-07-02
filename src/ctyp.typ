@@ -163,9 +163,13 @@
         font-style = variant
       }
     }
-    let font-cjk-name = if font-weight == none or font-weight == "regular" or font-weight in font-family.variants {
+    let font-cjk-name = if font-weight == none or font-weight == "regular" {
       font-family.name
-    } else if variant in _default-font-styles {
+    } else if type(font-family.variants) == array and font-weight in font-family.variants {
+      font-family.name
+    } else if type(font-family.variants) == dictionary and font-weight in font-family.variants.keys() {
+      font-family.variants.at(font-weight, default: font-family.name)
+    } else if font-style in _default-font-styles {
       font-family.name
     } else {
       font-cjk.values().first().name
