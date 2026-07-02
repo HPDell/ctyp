@@ -14,7 +14,7 @@
 }
 
 #testcase[
-  #let (theme, _) = ctyp()
+  #let (theme, _) = ctyp(fix-list-enum: true)
   #show: theme
 
   = 符号列表
@@ -33,7 +33,7 @@
 ]
 
 #testcase[
-  #let (theme, _) = ctyp()
+  #let (theme, _) = ctyp(fix-list-enum: true)
   #show: theme
 
   = 编号列表
@@ -52,7 +52,7 @@
 ]
 
 #testcase[
-  #let (theme, _) = ctyp()
+  #let (theme, _) = ctyp(fix-list-enum: true)
   #show: theme
 
   = 混合列表
@@ -75,7 +75,7 @@
 ]
 
 #testcase[
-  #let (theme, _) = ctyp()
+  #let (theme, _) = ctyp(fix-list-enum: true)
   #show: theme
 
   = 复杂混合列表
@@ -116,6 +116,7 @@
 
 #testcase[
   #let (theme, _) = ctyp(
+    fix-list-enum: true,
     fix-enum-args: (
       numberer: (
         enum-label("1.", width: 1em, alignment: left),
