@@ -21,7 +21,8 @@
 #show: page-grid.with(width: 48, note-right: 8)
 
 #let (ctypset, (song, hei, kai, fang)) = ctyp(
-  heading-numbering: "1."
+  heading-numbering: "1.",
+  fix-list-enum: true
 )
 #show: ctypset
 #show: codly-init
@@ -245,10 +246,15 @@ CTyp 包提供了以下预定义的字体集合：`fandol`, `fangzheng`, `source
 
 == 列表布局优化
 
-#note-ctyp-arg[fix-list-enum][设置是否修复列表样式。][默认值：`true`]
+#note-ctyp-arg[fix-list-enum][设置是否修复列表样式。][默认值：`false`]
 不论是编号列表还是符号列表，在使用中文时，很容易产生列表项目符号与内容基线不平的问题。
 该包重新设置了列表的样式，使得列表项目符号与内容基线对齐。
 该功能默认开启。
+
+#warning-block[
+  Typst 自 0.15 版本起，已经修复了该问题，因此该功能默认关闭。
+  如需自定义列表功能，则建议使用 itemize 宏包对列表进行自定义。
+]
 
 #note-block(title: [修复后的列表])[
 + 项目1

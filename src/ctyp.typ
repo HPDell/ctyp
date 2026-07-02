@@ -72,7 +72,7 @@
   /// 是否修正列表和枚举的样式。
   /// 如果为 true，将应用 `fix-list-args` 和 `fix-enum-args` 中定义的样式。
   /// -> bool
-  fix-list-enum: true,
+  fix-list-enum: false,
   /// 接受一个字典，定义列表样式的参数。详细参数见 @enumitem 函数。
   /// -> dictionary
   fix-list-args: (:),
@@ -139,8 +139,8 @@
       cjk-function = _default-font-functions.at(text-args.style)
       text-args.style = "normal"
     }
-    show regex(_default-cjk-regex): set text(..text-args)
-    show regex(_default-cjk-regex): cjk-function
+    show regex(_default-cjk-regex + "+"): set text(..text-args)
+    show regex(_default-cjk-regex + "+"): cjk-function
     show: if fix-smartquote { (body) => {
       show smartquote: set text(font: args.named().font.at(0).name)
       body
@@ -194,7 +194,7 @@
         name: latin,
         covers: "latin-in-cjk"
       ), font-cjk-name),
-      weight: if font-weight == none { 400 } else { _default-weight-map.at(font-weight, default: 400) },
+      weight: if font-weight == none { "bold" } else { _default-weight-map.at(font-weight, default: "bold") },
       style: font-style
     )
     
