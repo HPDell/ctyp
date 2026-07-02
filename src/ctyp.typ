@@ -139,8 +139,8 @@
       cjk-function = _default-font-functions.at(text-args.style)
       text-args.style = "normal"
     }
-    show regex(_default-cjk-regex): set text(..text-args)
-    show regex(_default-cjk-regex): cjk-function
+    show regex(_default-cjk-regex + "+"): set text(..text-args)
+    show regex(_default-cjk-regex + "+"): cjk-function
     show: if fix-smartquote { (body) => {
       show smartquote: set text(font: args.named().font.at(0).name)
       body
