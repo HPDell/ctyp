@@ -1,7 +1,13 @@
 #let fangzheng-fontset = (
   family: (
-    song: (name: "FZNewShuSong-Z10S"),
-    hei: (name: "FZHei-B01S"),
+    song: (name: "FZNewShuSong-Z10S", variants: (
+      bold: "FZSongHei-B07S",
+      extrabold: "FZXiaoBiaoSong-B05S",
+      heavy: "FZDaBiaoSong-B06S",
+    )),
+    hei: (name: "FZHei-B01S", variants: (
+      bold: "FZDaHei-B02S"
+    )),
     kai: (name: "FZKai-Z03S"),
     fang: (name: "FZFangSong-Z02S"),
     songhei: (name: "FZSongHei-B07S"),
@@ -15,7 +21,7 @@
     strong: (cjk: "hei", latin: "serif"),
     emph: (cjk: "kai", latin: "serif"),
     raw: (cjk: "fang", latin: "mono"),
-    heading: (cjk: "xiaobiaosong", latin: "serif"),
-    title: (cjk: "dahei", latin: "serif"),
+    heading: (cjk: "song:extrabold", latin: "serif"),
+    title: (cjk: "hei:bold", latin: "serif"),
   )
 )
